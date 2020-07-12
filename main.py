@@ -28,19 +28,7 @@ if os.path.exists('/dev/video0') == False:
 video_capture = cv2.VideoCapture(0)
 video_capture.set(3, frame_width)
 video_capture.set(4, frame_height)
-out = cv2.VideoWriter('output.mjpg', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10, (frame_width, frame_height))
-h_txt = 60
-v_txt = frame_height - 100
-h_spd = frame_width - 140
-v_spd = frame_height - 24
-text1 = ""
-text2 = ""
-fix = '0'
-speed = 0
-l_spd = 0
-gps_count = 0
-gps = ""
-sf = 50
+# out = cv2.VideoWriter('output.mjpg', cv2.VideoWriter_fourcc('M', 'J', 'P', 'G'), 10, (frame_width, frame_height))
 
 while True:
     # Capture video feed
