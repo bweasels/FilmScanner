@@ -28,7 +28,7 @@ if os.path.exists('/dev/video0') == False:
 video_capture = cv2.VideoCapture(0)
 video_capture.set(3, frame_width)
 video_capture.set(4, frame_height)
-out = cv2.VideoWriter('output.mjpg', cv2.fourcc('M', 'J', 'P', 'G'), 10, (frame_width, frame_height))
+out = cv2.VideoWriter('output.mjpg', fourcc('M', 'J', 'P', 'G'), 10, (frame_width, frame_height))
 h_txt = 60
 v_txt = frame_height - 100
 h_spd = frame_width - 140
