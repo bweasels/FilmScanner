@@ -35,7 +35,7 @@ while True:
     ret, frame = video_capture.read()
 
     # write ouput video file
-    out.write(frame)
+    # out.write(frame)
     # Display the resulting frame
     cv2.imshow('Video', frame)
 
