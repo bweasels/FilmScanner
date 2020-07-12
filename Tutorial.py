@@ -5,13 +5,14 @@ import time
 import cv2
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
+camera.resolution = (800, 600)
 rawCapture = PiRGBArray(camera)
 # allow the camera to warmup
 time.sleep(0.1)
 i = 0
 while i < 1000:
     # grab an image from the camera
-    camera.capture(rawCapture, format="bgr", resize=(800, 600))
+    camera.capture(rawCapture, format="bgr")
     image = rawCapture.array
 
     # display the image on screen and wait for a keypress
