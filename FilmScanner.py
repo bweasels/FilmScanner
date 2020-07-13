@@ -43,7 +43,7 @@ class CamApp(App):
         cv2.imshow('test', image)
         cv2.waitKey(1) & 0xFF
         if key == ord('q'):
-            break
+            exit(0)
 
         buf1 = cv2.flip(image, 0)
         buf = buf1.tostring()
