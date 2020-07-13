@@ -10,10 +10,12 @@ from threading import Thread
 import cv2
 
 
-class RaspiVid(res=(800, 480), previewExposure=False):
+class RaspiVid:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Set up the camera
+        self.res = (800, 480)
+        self.previewExposure = False
 
         self.camera = PiCamera(resolution=res)
 
