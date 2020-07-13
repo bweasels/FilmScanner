@@ -1,28 +1,41 @@
-# import the necessary packages
-from picamera.array import PiRGBArray
-from picamera import PiCamera
 import time
-import cv2
-import io
+import picamera
+import picamera.array
 
-# initialize the camera and grab a reference to the raw camera capture
-camera = PiCamera()
-stream = io.BytesIO()
+with picamera.PiCamera() as camera:
+    with picamera.array.PiRGBArray(camera) as stream:
+        camera.resolution = (100, 100)
+        camera.start_preview()
+        time.sleep(2)
+        camera.capture(stream, 'rgb')
+        # Show size of RGB data
+        print(stream.array.shape)
 
-# capture frames from the camera
-for frame in camera.capture_continuous(stream, format="jpeg"):
-    # grab the raw NumPy array representing the image, then initialize the timestamp
-    # and occupied/unoccupied text
-    # image = frame.array
-    cv2.imshow('frame', frame)
-    stream.truncate()
-    stream.seek(0)
-    if process(stream):
-        break
-
-cv2.destroyAllWindows()
+# # import the necessary packages
+# from picamera.array import PiRGBArray
+# from picamera import PiCamera
+# import time
+# import cv2
+# import io
 #
-# # allow the camera to warmup
+# # initialize the camera and grab a reference to the raw camera capture
+# camera = PiCamera()
+# stream = io.BytesIO()
+#
+# # capture frames from the camera
+# for frame in camera.capture_continuous(stream, format="rgb"):
+#     # grab the raw NumPy array representing the image, then initialize the timestamp
+#     # and occupied/unoccupied text
+#     # image = frame.array
+#     cv2.imshow('frame', frame)
+#     stream.truncate()
+#     stream.seek(0)
+#     if process(stream):
+#         break
+#
+# cv2.destroyAllWindows()
+# #
+# # # allow the camera to warmup
 # time.sleep(0.1)
 # i = 0
 # while i < 1000:
