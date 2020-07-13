@@ -18,7 +18,7 @@ class RaspiVid():
 
     def getFrame(self):
         self.camera.resolution = (800, 600)
-        self.capture(self.output, 'rgb')
+        self.camera.capture(self.output, 'rgb')
 
         print(self.output.shape)
         self.frame.truncate(0)
