@@ -6,7 +6,7 @@ from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-# from threading import thread
+from threading import Thread
 import cv2
 
 
@@ -14,21 +14,45 @@ import cv2
 class RaspiVid():
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        # Set up the camera
         self.camera = PiCamera(resolution=(800, 480))
         self.output = PiRGBArray(self.camera, size=(800, 480))
+        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True)
+
+        # set up variables for this
+        self.frame = None
+        self.stopped = False
+
+    def start(self):
+        # Start the thread to pull frames from the video stream
+        Thread(target=self.update, args=()).start()
+        return self
 
     def getFrame(self):
-        self.camera.capture(self.output, 'bgr')
-        image = self.output.array
-        self.output.truncate(0)
-        return image
+        return self.frame
 
+    def update(self):
+        # keep looping and keep the stream open
+        for f in self.stream:
+            self.frame = f.array
+            self.output.truncate(0)
+
+            # if told to stop close out camera
+            if self.stopped:
+                self.stream.close()
+                self.output.close()
+                self.camera.close()
+                return
+
+    def stop(self):
+        # tell the class to shutdown
+        self.stopped = True
 
 class CamApp(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.stream = RaspiVid()
+        self.stream = RaspiVid().start()
         self.img1 = Image()
         self.img1.anim_delay = 0.00
         self.framerate = 32
@@ -52,19 +76,6 @@ class CamApp(App):
         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
         texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
         self.img1.texture = texture
-
-    # def update(self, dt):
-    #     # display image from cam in opencv window
-    #     ret, frame = self.capture.read()
-    #     cv2.imshow("CV2 Image", frame)
-    #     # convert it to texture
-    #     buf1 = cv2.flip(frame, 0)
-    #     buf = buf1.tostring()
-    #     texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
-    #     # if working on RASPBERRY PI, use colorfmt='rgba' here instead, but stick with "bgr" in blit_buffer.
-    #     texture1.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-    #     # display image from the texture
-    #     self.img1.texture = texture1
 
 
 if __name__ == '__main__':
