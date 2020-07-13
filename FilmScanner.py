@@ -15,10 +15,10 @@ class RaspiVid():
         super().__init__(**kwargs)
         # self.camera = PiCamera(resolution=(800, 600))
         self.camera = PiCamera()
-        self.output = PiRGBArray(self.camera, size=(800, 600))
+        self.output = PiRGBArray(self.camera, size=(600, 800))
 
     def getFrame(self):
-        self.camera.resolution = (800, 600)
+        self.camera.resolution = (600, 800)
         self.camera.capture(self.output, 'bgr')
         image = self.output.array
         self.output.truncate(0)
@@ -41,7 +41,7 @@ class CamApp(App):
     def animate(self, dt):
         image = self.stream.getFrame()
         cv2.imshow('test', image)
-        cv2.waitKey(1) & 0xFF
+        key = cv2.waitKey(1) & 0xFF
         if key == ord('q'):
             exit(0)
 
