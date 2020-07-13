@@ -37,6 +37,7 @@ class CamApp(App):
         layout = BoxLayout()
         layout.add_widget(self.img1)
         Clock.schedule_interval(self.animate, 1.0/self.framerate)
+        return layout
 
     def animate(self, dt):
         image = self.stream.getFrame()
