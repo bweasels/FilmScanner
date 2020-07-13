@@ -10,10 +10,9 @@ from threading import Thread
 import cv2
 
 
-
-class RaspiVid():
+class RaspiVid(res=(800, 480), previewExposure=False):
     def __init__(self, **kwargs):
-        super().__init__(**kwargs, res=(800, 480), previewExposure=False)
+        super().__init__(**kwargs)
         # Set up the camera
 
         self.camera = PiCamera(resolution=res)
@@ -55,6 +54,7 @@ class RaspiVid():
         # tell the class to shutdown
         self.stopped = True
 
+
 class CamApp(App):
 
     def __init__(self, **kwargs):
@@ -67,7 +67,7 @@ class CamApp(App):
     def build(self):
         layout = BoxLayout()
         layout.add_widget(self.img1)
-        Clock.schedule_interval(self.animate, 1.0/self.framerate)
+        Clock.schedule_interval(self.animate, 1.0 / self.framerate)
         return layout
 
     def animate(self, dt):
