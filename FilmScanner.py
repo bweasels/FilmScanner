@@ -21,7 +21,7 @@ class RaspiVid():
         self.camera.capture(self.output, 'rgb')
         image = self.output.array
         print(image.shape)
-        self.frame.truncate(0)
+        self.output.truncate(0)
         print(image.shape)
         return image
 
