@@ -45,7 +45,7 @@ class CamApp(App):
         if key == ord('q'):
             exit(0)
 
-        __, img = cv2.imencode('jpg', image)
+        __, img = cv2.imencode('.jpg', image)
         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
         texture.blit_buffer(img, colorfmt='bgr', bufferfmt='ubyte')
         self.img1.texture = texture
