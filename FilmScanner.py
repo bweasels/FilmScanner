@@ -19,7 +19,7 @@ class RaspiVid():
 
     def getFrame(self):
         self.camera.resolution = (800, 600)
-        self.camera.capture(self.output, 'rgb')
+        self.camera.capture(self.output, 'bgr')
         image = self.output.array
         self.output.truncate(0)
         return image
@@ -41,11 +41,11 @@ class CamApp(App):
     def animate(self, dt):
         image = self.stream.getFrame()
         cv2.imshow('test', image)
-        cv2.waitKey()
+        # cv2.waitKey()
 
         buf = cv2.flip(image, 0)
         buf = buf.tostring()
-        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgra')
+        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
         texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
         self.img1.texture = texture
 
