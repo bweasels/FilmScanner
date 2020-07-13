@@ -6,6 +6,7 @@ from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from threading import thread
 import cv2
 
 
@@ -29,7 +30,7 @@ class CamApp(App):
         super().__init__(**kwargs)
         self.stream = RaspiVid()
         self.img1 = Image()
-        self.img1.anim_delay = 0.03
+        self.img1.anim_delay = 0.00
         self.framerate = 32
 
     def build(self):
@@ -45,7 +46,7 @@ class CamApp(App):
             exit(0)
 
         buf1 = cv2.flip(image, 0)
-
+        print(buf1[1:100,1])
         buf = buf1.tostring()
         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
         texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
