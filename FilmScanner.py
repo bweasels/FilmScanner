@@ -45,11 +45,9 @@ class CamApp(App):
         if key == ord('q'):
             exit(0)
 
-        buf1 = cv2.flip(image, 0)
-        print(buf1[1:100,1])
-        buf = buf1.tostring()
+        __, img = cv2.imencode('jpg', image)
         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-        texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+        texture.blit_buffer(img, colorfmt='bgr', bufferfmt='ubyte')
         self.img1.texture = texture
 
     # def update(self, dt):
