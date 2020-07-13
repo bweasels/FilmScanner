@@ -13,10 +13,16 @@ import cv2
 
 class RaspiVid():
     def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+        super().__init__(**kwargs, res=(800, 480), previewExposure=False)
         # Set up the camera
-        self.camera = PiCamera(resolution=(800, 480))
-        self.output = PiRGBArray(self.camera, size=(800, 480))
+
+        self.camera = PiCamera(resolution=res)
+
+        # if previewExposure:
+        #    self.camera.shutter_speed = 10
+        #    self.camera.awb_mode = 'sunlight'
+        #    self.iso = 100
+        self.output = PiRGBArray(self.camera, size=res)
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True)
 
         # set up variables for this
@@ -33,6 +39,7 @@ class RaspiVid():
 
     def update(self):
         # keep looping and keep the stream open
+        print(self.camera._get_camera_settings())
         for f in self.stream:
             self.frame = f.array
             self.output.truncate(0)
@@ -80,4 +87,5 @@ class CamApp(App):
 
 if __name__ == '__main__':
     CamApp().run()
+    RaspiVid.stop()
     cv2.destroyAllWindows()
