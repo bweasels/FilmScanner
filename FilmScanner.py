@@ -17,7 +17,8 @@ class RaspiVid():
         self.frame = PiRGBArray(self.camera, size=(800, 600))
 
     def getFrame(self):
-        image = self.frame.array
+        image = self.camera.capture(self.frame, 'rgb')
+        print(image.shape)
         self.frame.truncate(0)
         return image
 
