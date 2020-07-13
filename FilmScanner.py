@@ -62,7 +62,7 @@ class RaspiVid:
         output = "Analog Gain: " + str(ag) + " | Digital Gain: " + str(dg) + " | Shutter Speed: " + str(ss)
         print(output)
 
-    def lockSettings(self, shutterSpeed=10, iso=100, awbMode='daylight'):
+    def lockSettings(self, shutterSpeed=10, iso=100, awbMode='sunlight'):
         self.camera.shutter_speed = shutterSpeed
         self.camera.iso = iso
         self.camera.awb_mode = awbMode
