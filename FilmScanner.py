@@ -17,13 +17,13 @@ class RaspiVid:
         self.res = (800, 480)
         self.previewExposure = False
 
-        self.camera = PiCamera(resolution=res)
+        self.camera = PiCamera(resolution=self.res)
 
         # if previewExposure:
         #    self.camera.shutter_speed = 10
         #    self.camera.awb_mode = 'sunlight'
         #    self.iso = 100
-        self.output = PiRGBArray(self.camera, size=res)
+        self.output = PiRGBArray(self.camera, size=self.res)
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True)
 
         # set up variables for this
