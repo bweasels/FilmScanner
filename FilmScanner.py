@@ -40,15 +40,16 @@ class CamApp(App):
 
     def animate(self, dt):
         image = self.stream.getFrame()
+        image = cv2.flip(image, 0)
         cv2.imshow('test', image)
         key = cv2.waitKey(3) & 0xFF
         if key == ord('q'):
             exit(0)
 
-        __, img = cv2.imencode('.jpg', image)
+        buffer = image.tostring()
 
         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-        texture.blit_buffer(img.flatten(), colorfmt='bgr', bufferfmt='ubyte')
+        texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
         self.img1.texture = texture
 
     # def update(self, dt):
