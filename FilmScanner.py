@@ -8,6 +8,8 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 import cv2
 
+
+
 class RaspiVid():
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -17,38 +19,42 @@ class RaspiVid():
     def getFrame(self):
         image = self.frame.array
         self.frame.truncate(0)
-        return(image)
+        return image
+
 
 class CamApp(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.stream = RaspiVid()
         self.img1 = Image()
-        self.capture = cv2.VideoCapture(0)
+        self.framerate = 32
 
     def build(self):
-        self.img1 = Image()
         layout = BoxLayout()
         layout.add_widget(self.img1)
+        Clock.schedule_interval(self.animate, 1.0/self.framerate)
 
-        # opencv2 stuffs
-        self.capture = cv2.VideoCapture(0)
-        cv2.namedWindow("CV2 Image")
-        Clock.schedule_interval(self.update, 1.0 / 33.0)
-        return layout
+    def animate(self):
+        image = self.stream.getFrame()
+        buf = cv2.flip(image, 0)
+        buf = buf.tostring()
+        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
+        texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+        self.img1.texture = texture
 
-    def update(self, dt):
-        # display image from cam in opencv window
-        ret, frame = self.capture.read()
-        cv2.imshow("CV2 Image", frame)
-        # convert it to texture
-        buf1 = cv2.flip(frame, 0)
-        buf = buf1.tostring()
-        texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
-        # if working on RASPBERRY PI, use colorfmt='rgba' here instead, but stick with "bgr" in blit_buffer.
-        texture1.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
-        # display image from the texture
-        self.img1.texture = texture1
+    # def update(self, dt):
+    #     # display image from cam in opencv window
+    #     ret, frame = self.capture.read()
+    #     cv2.imshow("CV2 Image", frame)
+    #     # convert it to texture
+    #     buf1 = cv2.flip(frame, 0)
+    #     buf = buf1.tostring()
+    #     texture1 = Texture.create(size=(frame.shape[1], frame.shape[0]), colorfmt='bgr')
+    #     # if working on RASPBERRY PI, use colorfmt='rgba' here instead, but stick with "bgr" in blit_buffer.
+    #     texture1.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
+    #     # display image from the texture
+    #     self.img1.texture = texture1
 
 
 if __name__ == '__main__':
