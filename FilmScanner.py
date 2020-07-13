@@ -44,6 +44,7 @@ class RaspiVid:
         for f in self.stream:
             self.frame = f.array
             self.output.truncate(0)
+            self.getSettings()
 
             # if told to stop close out camera
             if self.stopped:
@@ -56,6 +57,12 @@ class RaspiVid:
         # tell the class to shutdown
         self.stopped = True
 
+    def getSettings(self):
+        iso = self.camera.iso
+        ss = self.camera.shutter_speed
+        awb = self.camera.awb_mode
+        output = "Iso:" + str(iso) + " | Shutter Speed: " + str(ss) + " | white balance mode: " + str(awb)
+        print(output)
 
 class CamApp(App):
 
