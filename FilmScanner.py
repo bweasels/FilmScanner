@@ -6,7 +6,7 @@ from kivy.clock import Clock
 from kivy.graphics.texture import Texture
 from picamera.array import PiRGBArray
 from picamera import PiCamera
-from threading import thread
+# from threading import thread
 import cv2
 
 
