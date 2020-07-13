@@ -13,7 +13,8 @@ import cv2
 class RaspiVid():
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.camera = PiCamera(resolution=(800, 600))
+        # self.camera = PiCamera(resolution=(800, 600))
+        self.camera = PiCamera()
         self.output = PiRGBArray(self.camera, size=(800, 600))
 
     def getFrame(self):
@@ -40,7 +41,7 @@ class CamApp(App):
     def animate(self, dt):
         image = self.stream.getFrame()
         cv2.imshow('test', image)
-        #cv2.waitKey()
+        cv2.waitKey()
 
         buf = cv2.flip(image, 0)
         buf = buf.tostring()
