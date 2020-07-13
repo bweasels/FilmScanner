@@ -42,10 +42,10 @@ class CamApp(App):
     def animate(self, dt):
         image = self.stream.getFrame()
         image = cv2.flip(image, 0)
-        cv2.imshow('test', image)
-        key = cv2.waitKey(3) & 0xFF
-        if key == ord('q'):
-            exit(0)
+        # cv2.imshow('test', image)
+        # key = cv2.waitKey(3) & 0xFF
+        # if key == ord('q'):
+        #     exit(0)
 
         buffer = image.tostring()
 
