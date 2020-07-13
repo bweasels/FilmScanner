@@ -13,8 +13,8 @@ stream = io.BytesIO()
 for frame in camera.capture_continuous(stream, format="jpeg"):
     # grab the raw NumPy array representing the image, then initialize the timestamp
     # and occupied/unoccupied text
-    image = frame.array
-    cv2.imshow('frame', image)
+    # image = frame.array
+    cv2.imshow('frame', frame)
     stream.truncate()
     stream.seek(0)
     if process(stream):
