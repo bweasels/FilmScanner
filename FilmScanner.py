@@ -13,12 +13,14 @@ import cv2
 class RaspiVid():
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.camera = PiCamera(resolution=(800, 600), framerate=32)
-        self.frame = PiRGBArray(self.camera, size=(800, 600))
+        self.camera = PiCamera()
+        self.output = PiRGBArray(self.camera, size=(800, 600))
 
     def getFrame(self):
-        image = self.camera.capture(self.frame, 'rgb')
-        print(image.shape)
+        self.camera.resolution = (800, 600)
+        self.capture(self.output, 'rgb')
+
+        print(self.output.shape)
         self.frame.truncate(0)
         return image
 
