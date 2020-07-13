@@ -19,10 +19,7 @@ class RaspiVid:
 
         self.camera = PiCamera(resolution=self.res)
 
-        # if previewExposure:
-        #    self.camera.shutter_speed = 10
-        #    self.camera.awb_mode = 'sunlight'
-        #    self.iso = 100
+
         self.output = PiRGBArray(self.camera, size=self.res)
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True)
 
@@ -65,11 +62,17 @@ class RaspiVid:
         output = "Analog Gain: " + str(ag) + " | Digital Gain: " + str(dg) + " | Shutter Speed: " + str(ss)
         print(output)
 
+    def lockSettings(self, shutterSpeed=10, iso=100, awbMode='daylight'):
+        self.camera.shutter_speed = shutterSpeed
+        self.camera.iso = iso
+        self.camera.awb_mode = awbMode
+
 class CamApp(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.stream = RaspiVid().start()
+        self.stream.lockSettings()
         self.img1 = Image()
         self.img1.anim_delay = 0.00
         self.framerate = 32
@@ -83,10 +86,6 @@ class CamApp(App):
     def animate(self, dt):
         image = self.stream.getFrame()
         image = cv2.flip(image, 0)
-        # cv2.imshow('test', image)
-        # key = cv2.waitKey(3) & 0xFF
-        # if key == ord('q'):
-        #     exit(0)
 
         buffer = image.tostring()
 
