@@ -13,12 +13,12 @@ import cv2
 class RaspiVid():
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        # self.camera = PiCamera(resolution=(800, 600))
-        self.camera = PiCamera()
+        self.camera = PiCamera(resolution=(800, 600))
+        #self.camera = PiCamera()
         self.output = PiRGBArray(self.camera, size=(600, 800))
 
     def getFrame(self):
-        self.camera.resolution = (600, 800)
+        #self.camera.resolution = (600, 800)
         self.camera.capture(self.output, 'bgr')
         image = self.output.array
         self.output.truncate(0)
@@ -46,8 +46,6 @@ class CamApp(App):
             exit(0)
 
         buf1 = cv2.flip(image, 0)
-        cv2.imshow('buf1', buf1)
-        cv2.waitKey(3)
 
         buf = buf1.tostring()
         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
