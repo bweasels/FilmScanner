@@ -58,10 +58,11 @@ class RaspiVid:
         self.stopped = True
 
     def getSettings(self):
-        iso = self.camera.iso
-        ss = self.camera.shutter_speed
-        awb = self.camera.awb_mode
-        output = "Iso:" + str(iso) + " | Shutter Speed: " + str(ss) + " | white balance mode: " + str(awb)
+        ag = self.camera.analog_gain
+        dg = self.camera.digital_gain
+        ss = self.camera.exposure_speed
+
+        output = "Analog Gain: " + str(ag) + " | Digital Gain: " + str(dg) + " | Shutter Speed: " + str(ss)
         print(output)
 
 class CamApp(App):
