@@ -14,11 +14,9 @@ class RaspiVid():
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.camera = PiCamera(resolution=(800, 480))
-        #self.camera = PiCamera()
         self.output = PiRGBArray(self.camera, size=(800, 480))
 
     def getFrame(self):
-        #self.camera.resolution = (600, 800)
         self.camera.capture(self.output, 'bgr')
         image = self.output.array
         self.output.truncate(0)
@@ -40,14 +38,15 @@ class CamApp(App):
 
     def animate(self, dt):
         image = self.stream.getFrame()
-        cv2.imshow('test', image)
-        key = cv2.waitKey(3) & 0xFF
-        if key == ord('q'):
-            exit(0)
+        #cv2.imshow('test', image)
+        #key = cv2.waitKey(3) & 0xFF
+        #if key == ord('q'):
+        #    exit(0)
 
         buf1 = cv2.flip(image, 0)
 
         buf = buf1.tostring()
+        print(buf)
         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
         texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
         self.img1.texture = texture
