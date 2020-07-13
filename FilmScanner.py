@@ -29,6 +29,7 @@ class CamApp(App):
         super().__init__(**kwargs)
         self.stream = RaspiVid()
         self.img1 = Image()
+        self.img1.anim_delay = 0.03
         self.framerate = 32
 
     def build(self):
@@ -47,7 +48,7 @@ class CamApp(App):
 
         buf = buf1.tostring()
         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-        texture.blit_buffer(buf, colorfmt='rgba', bufferfmt='ubyte')
+        texture.blit_buffer(buf, colorfmt='bgr', bufferfmt='ubyte')
         self.img1.texture = texture
 
     # def update(self, dt):
