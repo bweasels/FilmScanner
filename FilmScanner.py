@@ -40,7 +40,7 @@ class RaspiVid:
 
     def update(self):
         # keep looping and keep the stream open
-        print(self.camera._get_camera_settings())
+        # print(self.camera._get_camera_settings())
         for f in self.stream:
             self.frame = f.array
             self.output.truncate(0)
