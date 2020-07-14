@@ -1,0 +1,28 @@
+WindowManager:
+    MainScreen:
+    MenuScreen:
+
+<MainScreen>:
+    name: 'main'
+    FloatLayout:
+        Button:
+            id: menu
+            text: "Menu"
+            font_size: 40
+            size_hint: (0.2, 0.2)
+            pos: (800 * 0.8, 640 * 0.8)
+            background_color: (0.5, 0.5, 0.5, 0.25)
+            on_press:
+                root.manager.transition.direction = 'left'
+                root.manager.current = 'menu'
+        Image:
+            id: img1
+            anim_delay: 0.00
+
+<MenuScreen>:
+    name: 'menu'
+    FloatLayout:
+        Image:
+            id: img1
+            anim_delay: 0.00
+
