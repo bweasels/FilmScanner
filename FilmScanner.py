@@ -21,7 +21,7 @@ class RaspiVid:
 
 
         self.output = PiRGBArray(self.camera, size=self.res)
-        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True)
+        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 640))
 
         # set up variables for this
         self.frame = None

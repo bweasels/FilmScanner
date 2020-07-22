@@ -22,11 +22,6 @@ WindowManager:
                 root.manager.transition.direction = 'left'
                 root.manager.current = 'menu'
                 root.manager.get_screen('menu').start()
-        Label:
-            id: fps
-            text: "0"
-            size_hint: (0.1, 0.1)
-            pos: (0, 576)
 
 <MenuScreen>:
     name: 'menu'
@@ -41,7 +36,7 @@ WindowManager:
             size: (720, 576)
         Button:
             id: menu
-            text: "Return"
+            text: "return"
             font_size: 40
             size_hint: (0.2, 0.2)
             pos: (0, 640*0.8)
@@ -51,14 +46,6 @@ WindowManager:
                 root.manager.transition.direction = 'right'
                 root.manager.current = 'main'
                 root.manager.get_screen('main').start()
-        Button:
-            id: invert
-            text: "Invert\nColors"
-            font_size: 40
-            size_hint: (0.2, 0.2)
-            pos: (800*0.8, 640*0.8)
-            background_color: (0.5, 0.5, 0.5, 0.25)
-            on_press:
-                root.invert()
+
 
 

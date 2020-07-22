@@ -1,10 +1,10 @@
 # Kivy graphics imports
 from kivy.app import App
+from kivy.lang import Builder
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.graphics.texture import Texture
-from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.config import Config
 
 # piCamera imports
@@ -20,75 +20,39 @@ Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
 
 
-def processImage(image, invert, WBPoint):
-    # For some reason, openCV's images are flipped for Kivy
-    image = cv2.flip(image, 0)
-
-    # If invert button is pressed, flip that puppy
-    if invert:
-        image = cv2.bitwise_not(image)
-
-    # Perform more processing here
-
-    #
-    buffer = image.tostring()
-    texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-    texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
-    return image, texture
+sm = Builder.load_file('camappv2.kv')
 
 
-class MainScreen(Screen):
+class CamAppV2(App):
+
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        # Initialize the live stream
+        # self.stream = RaspiVid().start()
+        # self.stream.lockSettings()
+        # self.img1 = Image()
+        # self.img1.anim_delay = 0.00
         self.framerate = 32
-        self._clock = None
-        self._invert = False
-        self.start()
+        #
+        # # Add the buttons for the menus
+        # self.menu = Button(text='Menu', font_size=40, size_hint=(0.2, 0.2), pos=(800 * 0.8, 640 * 0.8),
+        #                    background_color=(0.5, 0.5, 0.5, 0.25))
 
-    def start(self):
-        self._clock = Clock.schedule_interval(self.animate, 1.0 / self.framerate)
-
-    def stop(self):
-        Clock.unschedule(self._clock)
-
-    def invert(self, value):
-        self._invert = value
+    def build(self):
+        Clock.schedule_interval(self.animate, 1.0 / self.framerate)
+        return
 
     def animate(self, dt):
         image = np.zeros((640, 800, 3), np.uint8)
         image = image + 25
+        # image = self.stream.getFrame()
+        image = cv2.flip(image, 0)
+        buffer = image.tostring()
 
-        # Set the texture and update the fps counter
-        image, texture = processImage(image=image, invert=self._invert, WBPoint=(0,0,0))
-        self.ids.background.texture = texture
-        self.ids.fps.text = str(round(1 / dt, 1))
-
-
-class MenuScreen(Screen):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        self._clock = None
-        self.framerate = 32
-        self._invert = False
-
-    def start(self):
-        self._clock = Clock.schedule_interval(self.animate, 1.0 / self.framerate)
-
-    def stop(self):
-        Clock.unschedule(self._clock)
-
-    def invert(self):
-        self._invert = not self._invert
-
-    def animate(self, dt):
-        # Make a dummy image for me
-        image = np.zeros((640, 800, 3), np.uint8)
-        image = image + 32
-
-        # Process the image according to user inputs and
-        image, texture = processImage(image=image, invert=self._invert, WBPoint=(0, 0, 0))
-        self.ids.background.texture = texture
-        self.ids.hist.texture = self.genHist(image, 720, 576)
+        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
+        texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
+        self.ids.img1.texture = texture
 
     def genHist(self, image, hist_w, hist_h):
         # Initial variables
@@ -123,25 +87,11 @@ class MenuScreen(Screen):
                      (0, 0, 255, 255), thickness=2)
 
         # Convert the histogram numpy array to a kivy recognizable image
-        histImg = cv2.flip(histImg, 0)
         buffer = histImg.tostring()
         texture = Texture.create(size=(hist_w, hist_h), colorfmt='bgra')
         texture.blit_buffer(buffer, colorfmt='bgra', bufferfmt='ubyte')
         return texture
 
 
-class WindowManager(ScreenManager):
-    pass
-
-
-class CamApp(App):
-
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-
-    def build(self):
-        pass
-
-
 if __name__ == '__main__':
-    CamApp().run()
+    CamAppV2().run()
