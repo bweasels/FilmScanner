@@ -162,7 +162,7 @@ class MainScreen(Screen):
         self._invert = not self._invert
 
     def activateWB(self):
-        if np.all(self._wb == self._whitePoint):
+        if self._wb is not None:
             self._wb = None
         else:
             self._wb = self._whitePoint
@@ -206,7 +206,7 @@ class MenuScreen(Screen):
         self._invert = not self._invert
 
     def activateWB(self):
-        if np.all(self._wb == self._whitePoint):
+        if self._wb is not None:
             self._wb = None
         else:
             self._wb = self._whitePoint
