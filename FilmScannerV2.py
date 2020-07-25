@@ -43,6 +43,7 @@ class RaspiVid:
         return self
 
     def getFrame(self):
+        print self.stream.exposure_compensation()
         return self.frame
 
     def _update(self):
