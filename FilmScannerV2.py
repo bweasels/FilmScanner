@@ -144,8 +144,8 @@ class MainScreen(Screen):
 
     def animate(self, dt):
         image = App.get_running_app().stream.getFrame()
-        cv2.imshow('raw image', image)
-        cv2.waitKey(0)
+        # cv2.imshow('raw image', image)
+        # cv2.waitKey(0)
         # image = np.zeros((640, 800, 3), np.uint8)
         # image = image + 25
 
