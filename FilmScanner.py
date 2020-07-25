@@ -72,7 +72,7 @@ class CamApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.stream = RaspiVid().start()
-        self.stream.settings(shutterSpeed=10, iso=100, awbMode='daylight')
+        self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
         self.img1 = Image()
         self.img1.anim_delay = 0.00
         self.framerate = 32
