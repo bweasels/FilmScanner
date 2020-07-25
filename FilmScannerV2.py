@@ -276,7 +276,10 @@ class CamApp(App):
         self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
 
     def build(self):
-        pass
+        self.stream = RaspiVid().start()
+        # wait to let camera warm up
+        cv2.waitKey(1)
+        self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
 
 
 if __name__ == '__main__':
