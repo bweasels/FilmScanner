@@ -8,11 +8,11 @@ from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.config import Config
 
-# piCamera imports
+# raspberry pi imports
 # from picamera.array import PiRGBArray
 # from picamera import PiCamera
 from gpiozero import CPUTemperature
-from threading import Thread
+# from threading import Thread
 
 # Image processing imports
 import cv2

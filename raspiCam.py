@@ -1,5 +1,6 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from threading import Thread
 
 class RaspiVid:
     def __init__(self, **kwargs):
