@@ -273,7 +273,7 @@ class CamApp(App):
         super().__init__(**kwargs)
         self.stream = RaspiVid().start()
         cv2.waitKey(1)
-        self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
+        # self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
 
     def build(self):
         pass
