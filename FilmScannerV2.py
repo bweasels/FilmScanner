@@ -202,10 +202,6 @@ class MenuScreen(Screen):
 
     def animate(self, dt):
         # Make a dummy image for me
-        #image = np.zeros((640, 800, 3), np.uint8)
-        #image[:, :, 0] = image[:, :, 0] + 25
-        #image[:, :, 1] = image[:, :, 1] + 50
-        #image[:, :, 2] = image[:, :, 2] + 75
         image = App.get_running_app().stream.getFrame()
 
         # If capturing wb point get it here

@@ -14,7 +14,7 @@ class RaspiVid:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Set up the camera
-        self.res = (800, 480)
+        self.res = (800, 640)
         self.previewExposure = False
 
         self.camera = PiCamera(resolution=self.res)
