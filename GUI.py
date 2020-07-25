@@ -3,6 +3,7 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.uix.button import Button
+from kivy.uix.slider import Slider
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.config import Config
@@ -127,14 +128,16 @@ class MenuScreen(Screen):
         return self._whitePoint
 
     def on_touch_up(self, touch):
-        # Touch.pos[0] is x, touch.pos[1] is y
         # On touch if within the image, gather the 5x5 grid of pixels and get average bgr for wb
         if (touch.pos[0] < 700.0) & (touch.pos[1] > 110.0):
+
+            # Get the ratio between the onscreen image and actual image
             xRatio = 800.0 / 700.0
             yRatio = 640.0 / 540.0
+
+            # Use the ratio and offsets to get the full image size
             self._wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
             self._wbCapture = True
-            print(self._wbPoint)
 
     def animate(self, dt):
         # Make a dummy image for me
@@ -208,7 +211,6 @@ class WindowManager(ScreenManager):
 
 
 class CamApp(App):
-
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 

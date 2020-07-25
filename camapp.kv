@@ -54,6 +54,7 @@ WindowManager:
                 root.manager.transition.direction = 'right'
                 root.manager.current = 'main'
                 root.manager.get_screen('main').start()
+
         Button:
             id: invert
             text: "Invert\nColors"
@@ -75,4 +76,13 @@ WindowManager:
             on_press:
                 root.activateWB()
                 root.manager.get_screen('main').activateWB()
+
+        Slider:
+            id: exposureSlider
+            min: 0
+            max: 100
+            step: 1
+            orientation: 'vertical'
+            pos: (640, 80)
+            size: (120, 100)
 
