@@ -54,7 +54,6 @@ class RaspiVid:
         # tell the class to shutdown
         self.stopped = True
 
-    @property
     def settings(self):
         ag = self.camera.analog_gain
         dg = self.camera.digital_gain
@@ -63,7 +62,6 @@ class RaspiVid:
         output = "Analog Gain: " + str(ag) + " | Digital Gain: " + str(dg) + " | Shutter Speed: " + str(ss)
         return output
 
-    @settings.setter
     def settings(self, shutterSpeed, iso, awbMode):
         self.camera.shutter_speed = shutterSpeed
         self.camera.iso = iso

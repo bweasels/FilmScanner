@@ -49,6 +49,8 @@ WindowManager:
             size_hint: (0.2, 0.18)
             pos: (0, 0)
             background_color: (0.5, 0.5, 0.5, 0.25)
+            halign: 'center'
+            valign: 'middle'
             on_press:
                 root.stop()
                 root.manager.transition.direction = 'right'
@@ -62,6 +64,8 @@ WindowManager:
             size_hint: (0.2, 0.18)
             pos: (320, 0)
             background_color: (0.5, 0.5, 0.5, 0.25)
+            halign: 'center'
+            valign: 'middle'
             on_press:
                 root.invert()
                 root.manager.get_screen('main').invert()
@@ -73,16 +77,28 @@ WindowManager:
             size_hint: (0.2, 0.18)
             pos: (640, 0)
             background_color: (0.5, 0.5, 0.5, 0.25)
+            halign: 'center'
+            valign: 'middle'
             on_press:
                 root.activateWB()
                 root.manager.get_screen('main').activateWB()
 
         Slider:
             id: exposureSlider
-            min: 0
-            max: 100
-            step: 1
+            min: -24
+            max: 24
+            step: 1/6
+            value: 0
             orientation: 'vertical'
-            pos: (640, 80)
-            size: (120, 100)
+            pos: (700, 130)
+            size_hint: (0.1, 0.7)
+
+        Label:
+            id: exposureLabel:
+            text: "Exposure\nComp"
+            font_size: 24
+            pos: (665, 540)
+            size_hint: (0.2, 0.2)
+            halign: 'center'
+            valign: 'middle'
 

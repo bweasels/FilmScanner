@@ -101,6 +101,7 @@ class MenuScreen(Screen):
         self._framerate = 32
         self._invert = False
 
+        # A variety of properties for white balance control
         self._wb = None
         self._whitePoint = (255, 255, 255)
         self._wbCapture = False
