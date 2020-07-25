@@ -272,8 +272,8 @@ class WindowManager(ScreenManager):
 class CamApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.stream = RaspiVid().start()
-        self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
+        self.stream = None#= RaspiVid().start()
+        # self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
 
     def build(self):
         self.stream = RaspiVid().start()
