@@ -5,7 +5,7 @@ from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.uix.slider import Slider
 from kivy.graphics.texture import Texture
-# from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.config import Config
 
 # raspberry pi imports
