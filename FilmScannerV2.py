@@ -11,6 +11,7 @@ from kivy.config import Config
 # piCamera imports
 from picamera.array import PiRGBArray
 from picamera import PiCamera
+from gpiozero import CPUTemperature
 from threading import Thread
 
 # Image processing imports
@@ -300,11 +301,15 @@ class CamApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.stream = RaspiVid().start()
+        self.tempMonitor = Clock.schedule_interval(self.monitorTemp, 1.0)
         cv2.waitKey(1)
         # self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
 
     def build(self):
         pass
+
+    def monitorTemp(self, dt):
+        print(CPUTemperature)
 
 if __name__ == '__main__':
     CamApp().run()
