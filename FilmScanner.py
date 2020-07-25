@@ -76,11 +76,12 @@ class CamAppTest(App):
         self.img1 = Image()
         self.img1.anim_delay = 0.00
         self.framerate = 32
+        self.clock = None
 
     def build(self):
         layout = BoxLayout()
         layout.add_widget(self.img1)
-        Clock.schedule_interval(self.animate, 1.0 / self.framerate)
+        self.clock = Clock.schedule_interval(self.animate, 1.0 / self.framerate)
         return layout
 
     def animate(self, dt):
@@ -93,8 +94,10 @@ class CamAppTest(App):
         texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
         self.img1.texture = texture
 
+    def stop(self):
+        Clock.unschedule(self.clock)
+        self.stream.stop()
 
 if __name__ == '__main__':
-    CamAppTest().run()
-    RaspiVid.stop()
-    cv2.destroyAllWindows()
+    app = CamAppTest().run()
+    app.stop()
