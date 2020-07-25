@@ -19,9 +19,8 @@ class RaspiVid:
 
         self.camera = PiCamera(resolution=self.res)
 
-
         self.output = PiRGBArray(self.camera, size=self.res)
-        self.stream = self.camera.capture_continuous(self.output, format='bgra', use_video_port=True, resize=(800, 640))
+        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 640))
 
         # set up variables for this
         self.frame = None
@@ -72,7 +71,7 @@ class CamAppTest(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.stream = RaspiVid().start()
-        self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
+        #self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
         self.img1 = Image()
         self.img1.anim_delay = 0.00
         self.framerate = 32
@@ -90,8 +89,8 @@ class CamAppTest(App):
 
         buffer = image.tostring()
 
-        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgra')
-        texture.blit_buffer(buffer, colorfmt='bgra', bufferfmt='ubyte')
+        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
+        texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
         self.img1.texture = texture
 
     def stop(self):
@@ -99,5 +98,4 @@ class CamAppTest(App):
         self.stream.stop()
 
 if __name__ == '__main__':
-    app = CamAppTest().run()
-    app.stop()
+    CamAppTest().run()
