@@ -17,7 +17,7 @@ WindowManager:
             size_hint: (0.2, 0.2)
             pos: (800 * 0.8, 640 * 0.8)
             background_color: (0.5, 0.5, 0.5, 0.25)
-            on_press:
+            on_release:
                 root.stop()
                 root.manager.transition.direction = 'left'
                 root.manager.current = 'menu'
@@ -51,7 +51,7 @@ WindowManager:
             background_color: (0.5, 0.5, 0.5, 0.25)
             halign: 'center'
             valign: 'middle'
-            on_press:
+            on_release:
                 root.stop()
                 root.manager.transition.direction = 'right'
                 root.manager.current = 'main'
@@ -66,7 +66,7 @@ WindowManager:
             background_color: (0.5, 0.5, 0.5, 0.25)
             halign: 'center'
             valign: 'middle'
-            on_press:
+            on_release:
                 root.invert()
                 root.manager.get_screen('main').invert()
 
@@ -79,7 +79,7 @@ WindowManager:
             background_color: (0.5, 0.5, 0.5, 0.25)
             halign: 'center'
             valign: 'middle'
-            on_press:
+            on_release:
                 root.activateWB()
                 root.manager.get_screen('main').activateWB()
 
