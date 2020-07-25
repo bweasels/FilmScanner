@@ -275,15 +275,12 @@ class WindowManager(ScreenManager):
 class CamApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.stream = None#= RaspiVid().start()
-        # self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
-
-    def build(self):
         self.stream = RaspiVid().start()
-        # wait to let camera warm up
         cv2.waitKey(1)
         self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
 
+    def build(self):
+        pass
 
 if __name__ == '__main__':
     CamApp().run()
