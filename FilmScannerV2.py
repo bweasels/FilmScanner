@@ -25,13 +25,13 @@ class RaspiVid:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Set up the camera
-        self.res = (800, 480)
+        self.res = (800, 640)
         self.previewExposure = False
 
         self.camera = PiCamera(resolution=self.res)
 
         self.output = PiRGBArray(self.camera, size=self.res)
-        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True)
+        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 640))
 
         # set up variables for this
         self.frame = None
