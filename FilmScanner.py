@@ -95,6 +95,6 @@ class CamAppTest(App):
 
 
 if __name__ == '__main__':
-    CamApp().run()
+    CamAppTest().run()
     RaspiVid.stop()
     cv2.destroyAllWindows()
