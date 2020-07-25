@@ -35,16 +35,19 @@ WindowManager:
             id: background
             anim_delay: 0.00
             pos: (-64, 80)
+            size: (720, 576)
+
         Image:
             id: hist
-            pos: (0, 0)
+            pos: (-64, 80)
             size: (720, 576)
+
         Button:
             id: menu
             text: "Return"
-            font_size: 40
-            size_hint: (0.2, 0.2)
-            pos: (0, 640*0.8)
+            font_size: 30
+            size_hint: (0.2, 0.18)
+            pos: (0, 0)
             background_color: (0.5, 0.5, 0.5, 0.25)
             on_press:
                 root.stop()
@@ -54,11 +57,22 @@ WindowManager:
         Button:
             id: invert
             text: "Invert\nColors"
-            font_size: 40
-            size_hint: (0.2, 0.2)
-            pos: (800*0.8, 640*0.8)
+            font_size: 30
+            size_hint: (0.2, 0.18)
+            pos: (320, 0)
             background_color: (0.5, 0.5, 0.5, 0.25)
             on_press:
                 root.invert()
+                root.manager.get_screen('main').invert()
 
+        Button:
+            id: wbactivate
+            text: "White\nBalance"
+            font_size: 30
+            size_hint: (0.2, 0.18)
+            pos: (640, 0)
+            background_color: (0.5, 0.5, 0.5, 0.25)
+            on_press:
+                root.activateWB()
+                root.manager.get_screen('main').activateWB()
 
