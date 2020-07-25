@@ -309,7 +309,8 @@ class CamApp(App):
         pass
 
     def monitorTemp(self, dt):
-        print(CPUTemperature)
+        cpu = CPUTemperature()
+        print(cpu.temperature)
 
 if __name__ == '__main__':
     CamApp().run()
