@@ -1,3 +1,4 @@
+from kivy.app import App
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.graphics.texture import Texture
 from kivy.clock import Clock
