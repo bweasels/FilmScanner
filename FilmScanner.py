@@ -41,7 +41,7 @@ class RaspiVid:
         for f in self.stream:
             self.frame = f.array
             self.output.truncate(0)
-            print(self.settings())
+            print(self.settings)
 
             # if told to stop close out camera
             if self.stopped:
