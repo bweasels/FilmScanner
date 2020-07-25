@@ -67,7 +67,7 @@ class RaspiVid:
         self.camera.iso = iso
         self.camera.awb_mode = awbMode
 
-class CamApp(App):
+class CamAppTest(App):
 
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
