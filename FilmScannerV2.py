@@ -142,7 +142,7 @@ class MainScreen(Screen):
         self._whitePoint = value
 
     def animate(self, dt):
-        image = App.stream.getFrame()
+        image = App.get_running_app().stream.getFrame()
         # image = np.zeros((640, 800, 3), np.uint8)
         # image = image + 25
 
@@ -203,7 +203,7 @@ class MenuScreen(Screen):
         #image[:, :, 0] = image[:, :, 0] + 25
         #image[:, :, 1] = image[:, :, 1] + 50
         #image[:, :, 2] = image[:, :, 2] + 75
-        image = App.stream.getFrame()
+        image = App.get_running_app().stream.getFrame()
 
         # If capturing wb point get it here
         if self._wbCapture:
