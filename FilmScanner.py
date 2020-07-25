@@ -21,7 +21,7 @@ class RaspiVid:
 
 
         self.output = PiRGBArray(self.camera, size=self.res)
-        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 640))
+        self.stream = self.camera.capture_continuous(self.output, format='bgra', use_video_port=True, resize=(800, 640))
 
         # set up variables for this
         self.frame = None
@@ -90,8 +90,8 @@ class CamAppTest(App):
 
         buffer = image.tostring()
 
-        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-        texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
+        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgra')
+        texture.blit_buffer(buffer, colorfmt='bgra', bufferfmt='ubyte')
         self.img1.texture = texture
 
     def stop(self):
