@@ -34,19 +34,19 @@ WindowManager:
         Image:
             id: background
             anim_delay: 0.00
-            pos: (-64, 80)
-            size: (720, 576)
+            pos: (0, 128)
+            size_hint: (0.8, 0.8)
 
         Image:
             id: hist
-            pos: (-64, 80)
-            size: (720, 576)
+            pos: (0, 128)
+            size_hint: (0.8, 0.8)
 
         Button:
             id: menu
             text: "Return"
             font_size: 30
-            size_hint: (0.2, 0.18)
+            size_hint: (0.2, 0.2)
             pos: (0, 0)
             background_color: (0.5, 0.5, 0.5, 0.25)
             halign: 'center'
@@ -61,7 +61,7 @@ WindowManager:
             id: invert
             text: "Invert\nColors"
             font_size: 30
-            size_hint: (0.2, 0.18)
+            size_hint: (0.2, 0.2)
             pos: (320, 0)
             background_color: (0.5, 0.5, 0.5, 0.25)
             halign: 'center'
@@ -74,7 +74,7 @@ WindowManager:
             id: wbactivate
             text: "White\nBalance"
             font_size: 30
-            size_hint: (0.2, 0.18)
+            size_hint: (0.2, 0.2)
             pos: (640, 0)
             background_color: (0.5, 0.5, 0.5, 0.25)
             halign: 'center'
@@ -90,14 +90,14 @@ WindowManager:
             step: 1
             value: 0
             orientation: 'vertical'
-            pos: (700, 130)
-            size_hint: (0.1, 0.7)
+            pos: (640, 130)
+            size_hint: (0.2, 0.7)
 
         Label:
             id: exposureLabel:
             text: "Exposure\nComp"
             font_size: 24
-            pos: (665, 540)
+            pos: (640, 540)
             size_hint: (0.2, 0.2)
             halign: 'center'
             valign: 'middle'
