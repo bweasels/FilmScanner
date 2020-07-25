@@ -1,17 +1,25 @@
+# Kivy graphics imports
 from kivy.app import App
-from kivy.uix.widget import Widget
-from kivy.uix.boxlayout import BoxLayout
 from kivy.uix.image import Image
 from kivy.clock import Clock
+from kivy.uix.button import Button
+from kivy.uix.slider import Slider
 from kivy.graphics.texture import Texture
-from picamera.array import PiRGBArray
-from picamera import PiCamera
+from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.config import Config
+
+# piCamera imports
+# from picamera.array import PiRGBArray
+# from picamera import PiCamera
 from threading import Thread
+
+# Image processing imports
 import cv2
 import numpy as np
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
+
 
 class RaspiVid:
     def __init__(self, **kwargs):
@@ -22,9 +30,8 @@ class RaspiVid:
 
         self.camera = PiCamera(resolution=self.res)
 
-
         self.output = PiRGBArray(self.camera, size=self.res)
-        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True)
+        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 640))
 
         # set up variables for this
         self.frame = None
@@ -57,7 +64,6 @@ class RaspiVid:
         # tell the class to shutdown
         self.stopped = True
 
-    @property
     def settings(self):
         ag = self.camera.analog_gain
         dg = self.camera.digital_gain
@@ -66,90 +72,156 @@ class RaspiVid:
         output = "Analog Gain: " + str(ag) + " | Digital Gain: " + str(dg) + " | Shutter Speed: " + str(ss)
         return output
 
-    @settings.setter
     def settings(self, shutterSpeed, iso, awbMode):
         self.camera.shutter_speed = shutterSpeed
         self.camera.iso = iso
         self.camera.awb_mode = awbMode
 
-# class CamApp(App):
-#
-#     def __init__(self, **kwargs):
-#         super().__init__(**kwargs)
-#         self.stream = RaspiVid().start()
-#         self.stream.settings(shutterSpeed=10, iso=100, awbMode='daylight')
-#         self.img1 = Image()
-#         self.img1.anim_delay = 0.00
-#         self.framerate = 32
-#
-#     def build(self):
-#         layout = BoxLayout()
-#         layout.add_widget(self.img1)
-#         Clock.schedule_interval(self.animate, 1.0 / self.framerate)
-#         return layout
-#
-#     def animate(self, dt):
-#         image = self.stream.getFrame()
-#         image = cv2.flip(image, 0)
-#
-#         buffer = image.tostring()
-#
-#         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-#         texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
-#         self.img1.texture = texture
+
+def processImage(image, invert, WBPoint=None):
+    # For some reason, openCV's images are flipped for Kivy
+    image = cv2.flip(image, 0)
+
+    if WBPoint is not None:
+        # Split image into channels (array notation is more efficient than cv2.split
+        b = image[:, :, 0]
+        g = image[:, :, 1]
+        r = image[:, :, 2]
+
+        # Find the overall luminance of the image to correct to when white balancing
+        lum = (b + g + r) / 3
+
+        # perform the white balance, and overwrite the channels
+        b = b * lum / WBPoint[0]
+        g = g * lum / WBPoint[1]
+        r = r * lum / WBPoint[2]
+
+        image[:, :, 0] = b
+        image[:, :, 1] = g
+        image[:, :, 2] = r
+
+    # If invert button is pressed, flip that puppy
+    if invert:
+        image = cv2.bitwise_not(image)
+
+    # This is all code to convert it to a bitstream for Kivy
+    buffer = image.tostring()
+    texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
+    texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
+    return image, texture
+
 
 class MainScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-
         self.framerate = 32
         self._clock = None
-        self._stream = None
+        self._invert = False
+
+        self._wb = None
+        self._whitePoint = (255, 255, 255)
+
         self.start()
 
     def start(self):
-        self._stream = RaspiVid.start()
-        self._stream.settings(shutterSpeed=10, iso=100, awbMode='daylight')
         self._clock = Clock.schedule_interval(self.animate, 1.0 / self.framerate)
 
     def stop(self):
-        self._stream.stop()
         Clock.unschedule(self._clock)
 
+    def invert(self):
+        self._invert = not self._invert
+
+    def activateWB(self):
+        if np.all(self._wb == self._whitePoint):
+            self._wb = None
+        else:
+            self._wb = self._whitePoint
+
+    def setWhitePoint(self, value):
+        self._whitePoint = value
+
     def animate(self, dt):
+        image = app.stream.getFrame()
         # image = np.zeros((640, 800, 3), np.uint8)
         # image = image + 25
-        image = self._stream.getFrame()
-        image = cv2.flip(image, 0)
 
-        buffer = image.tostring()
-
-        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-        texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
+        # Set the texture and update the fps counter
+        image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
         self.ids.background.texture = texture
+        self.ids.fps.text = str(round(1 / dt, 1))
+
 
 class MenuScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._clock = None
-        self.framerate = 32
+        self._framerate = 32
+        self._invert = False
+
+        # A variety of properties for white balance control
+        self._wb = None
+        self._whitePoint = (255, 255, 255)
+        self._wbCapture = False
+        self._wbPoint = (0, 0)
 
     def start(self):
-        self._clock = Clock.schedule_interval(self.animate, 1.0 / self.framerate)
+        self._clock = Clock.schedule_interval(self.animate, 1.0 / self._framerate)
 
     def stop(self):
         Clock.unschedule(self._clock)
 
+    def invert(self):
+        self._invert = not self._invert
+
+    def activateWB(self):
+        if np.all(self._wb == self._whitePoint):
+            self._wb = None
+        else:
+            self._wb = self._whitePoint
+
+    def setWhitePoint(self, value):
+        self._whitePoint = value
+
+    def getWhitePoint(self):
+        return self._whitePoint
+
+    def on_touch_up(self, touch):
+        # On touch if within the image, gather the 5x5 grid of pixels and get average bgr for wb
+        if (touch.pos[0] < 700.0) & (touch.pos[1] > 110.0):
+            # Get the ratio between the onscreen image and actual image
+            xRatio = 800.0 / 700.0
+            yRatio = 640.0 / 540.0
+
+            # Use the ratio and offsets to get the full image size
+            self._wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
+            self._wbCapture = True
+
     def animate(self, dt):
-        image = np.zeros((640, 800, 3), np.uint8)
-        image = image + 25
-        # image = self.stream.getFrame()
-        image = cv2.flip(image, 0)
+        # Make a dummy image for me
+        #image = np.zeros((640, 800, 3), np.uint8)
+        #image[:, :, 0] = image[:, :, 0] + 25
+        #image[:, :, 1] = image[:, :, 1] + 50
+        #image[:, :, 2] = image[:, :, 2] + 75
+        image = app.stream.getFrame()
 
-        buffer = image.tostring()
+        # If capturing wb point get it here
+        if self._wbCapture:
+            # Cut out a 10x10 pixel area to sample white balance from
+            sample = image[self._wbPoint[1] - 5:self._wbPoint[1] + 5,
+                     self._wbPoint[0] - 5:self._wbPoint[0] + 5, :]
 
-        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-        texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
+            # average over it and set it as the white point in both the menu and main screen
+            self._whitePoint = np.mean(sample, axis=(0, 1))
+            self.manager.get_screen('main').setWhitePoint(self._whitePoint)
+
+            # Tell it to capturing white point
+            self._wbCapture = False
+
+        image = cv2.resize(image, (720, 576))
+
+        # Process the image according to user inputs
+        image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
         self.ids.background.texture = texture
         self.ids.hist.texture = self.genHist(image, 720, 576)
 
@@ -196,15 +268,16 @@ class MenuScreen(Screen):
 class WindowManager(ScreenManager):
     pass
 
-class CamApp(App):
 
+class CamApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.stream = RaspiVid().start()
+        self.stream.settings(shutterSpeed=10, iso=100, awbMode='daylight')
 
     def build(self):
         pass
 
+
 if __name__ == '__main__':
     CamApp().run()
-    RaspiVid.stop()
-    cv2.destroyAllWindows()
