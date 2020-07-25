@@ -43,16 +43,14 @@ class RaspiVid:
         return self
 
     def getFrame(self):
-        print('Getting Frame')
         return self.frame
 
     def _update(self):
         # keep looping and keep the stream open
-        # print(self.camera._get_camera_settings())
         for f in self.stream:
             self.frame = f.array
             self.output.truncate(0)
-            print(self.settings())
+            print('Update is running')
 
             # if told to stop close out camera
             if self.stopped:
@@ -65,13 +63,13 @@ class RaspiVid:
         # tell the class to shutdown
         self.stopped = True
 
-    def settings(self):
-        ag = self.camera.analog_gain
-        dg = self.camera.digital_gain
-        ss = self.camera.exposure_speed
-
-        output = "Analog Gain: " + str(ag) + " | Digital Gain: " + str(dg) + " | Shutter Speed: " + str(ss)
-        return output
+    # def settings(self):
+    #     ag = self.camera.analog_gain
+    #     dg = self.camera.digital_gain
+    #     ss = self.camera.exposure_speed
+    #
+    #     output = "Analog Gain: " + str(ag) + " | Digital Gain: " + str(dg) + " | Shutter Speed: " + str(ss)
+    #     return output
 
     def settings(self, shutterSpeed, iso, awbMode):
         self.camera.shutter_speed = shutterSpeed
