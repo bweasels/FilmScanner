@@ -43,7 +43,6 @@ class RaspiVid:
         return self
 
     def getFrame(self):
-        print(self.camera.exposure_compensation)
         return self.frame
 
     def _update(self):
@@ -51,7 +50,6 @@ class RaspiVid:
         for f in self.stream:
             self.frame = f.array
             self.output.truncate(0)
-            print('Update is running')
 
             # if told to stop close out camera
             if self.stopped:
@@ -64,18 +62,49 @@ class RaspiVid:
         # tell the class to shutdown
         self.stopped = True
 
-    # def settings(self):
-    #     ag = self.camera.analog_gain
-    #     dg = self.camera.digital_gain
-    #     ss = self.camera.exposure_speed
-    #
-    #     output = "Analog Gain: " + str(ag) + " | Digital Gain: " + str(dg) + " | Shutter Speed: " + str(ss)
-    #     return output
+    @property
+    def iso(self):
+        return self.camera.analog_gain, self.camera.digital_gain
+
+    @iso.setter
+    def iso(self, value):
+        self.camera.iso = value
+
+    @property
+    def shutterSpeed(self):
+        return self.camera.shutter_speed
+
+    @shutterSpeed.setter
+    def shutterSpeed(self, value):
+        self.camera.shutter_speed = value
+
+    @property
+    def awbMode(self):
+        return self.camera.awb_mode
+
+    @awbMode.setter
+    def awbMode(self, value):
+        self.camera.awb_mode = value
+
+    @property
+    def exposure_comp(self):
+        return self.camera.exposure_compensation
+
+    @exposure_comp.setter
+    def exposure_comp(self, value):
+        self.camera.exposure_compensation = value
+
+    def getSettings(self):
+        ag = self.iso[0]
+        dg = self.iso[1]
+        ss = self.shutterSpeed
+        output = "Analog Gain: " + str(ag) + " | Digital Gain: " + str(dg) + " | Shutter Speed: " + str(ss)
+        return output
 
     def settings(self, shutterSpeed, iso, awbMode):
-        self.camera.shutter_speed = shutterSpeed
-        self.camera.iso = iso
-        self.camera.awb_mode = awbMode
+        self.shutterSpeed = shutterSpeed
+        self.iso = iso
+        self.awbMode = awbMode
 
 
 def processImage(image, invert, WBPoint=None):
@@ -272,7 +301,7 @@ class CamApp(App):
         super().__init__(**kwargs)
         self.stream = RaspiVid().start()
         cv2.waitKey(1)
-        # self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
+        self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
 
     def build(self):
         pass
