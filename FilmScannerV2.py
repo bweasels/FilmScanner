@@ -9,8 +9,8 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.config import Config
 
 # piCamera imports
-# from picamera.array import PiRGBArray
-# from picamera import PiCamera
+from picamera.array import PiRGBArray
+from picamera import PiCamera
 from threading import Thread
 
 # Image processing imports
