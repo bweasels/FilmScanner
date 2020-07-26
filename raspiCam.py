@@ -99,6 +99,7 @@ class RaspiCam:
         self.previewExposure = False
 
         self.camera = PiCamera(sensor_mode=3)
+        self.camera.start_preview()
         self.camera.awb_mode = 'off'
         self.camera.iso = 100
 
@@ -113,7 +114,6 @@ class RaspiCam:
 
     def _capture(self, fname):
         stream = BytesIO()
-        self.camera.start_preview()
         time.sleep(0.1)
         self.camera.capture(stream, 'jpeg', bayer=True)
         d = RPICAM2DNG()
