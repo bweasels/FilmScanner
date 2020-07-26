@@ -223,13 +223,13 @@ class CamApp(App):
         self.stream.stop()
 
     def captureImage(self):
-        # Stop the menu, and then the video feed & get the current settings from the stream
+        # Stop the menu, get the current settings from the stream, and stop the stream
         self.root.get_screen('main').stop()
-        self.stream.stop()
         shutterSpeed = self.stream.shutterSpeed
         ev = self.stream.exposure_comp
+        self.stream.stop()
 
-        # Start the camera and apply the settings
+        # Start the "still camera" and apply the settings
         self.camera = RaspiCam()
         self.camera.shutterSpeed = shutterSpeed
         self.camera.exposureComp = ev
