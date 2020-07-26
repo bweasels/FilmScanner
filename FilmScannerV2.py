@@ -229,6 +229,7 @@ class CamApp(App):
         ev = self.stream.exposure_comp
         self.stream.stop()
 
+
         # Start the "still camera" and apply the settings
         self.camera = RaspiCam()
         self.camera.shutterSpeed = shutterSpeed
