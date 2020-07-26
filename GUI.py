@@ -31,22 +31,6 @@ def processImage(image, invert, WBPoint=None):
     image = cv2.flip(image, 0)
 
     if WBPoint is not None:
-        # # Split image into channels (array notation is more efficient than cv2.split
-        # b = image[:, :, 0]
-        # g = image[:, :, 1]
-        # r = image[:, :, 2]
-        #
-        # # Find the overall luminance of the image to correct to when white balancing
-        # lum = (b + g + r) / 3
-        #
-        # # perform the white balance, and overwrite the channels
-        # b = b * lum / WBPoint[0]
-        # g = g * lum / WBPoint[1]
-        # r = r * lum / WBPoint[2]
-        #
-        # image[:, :, 0] = b
-        # image[:, :, 1] = g
-        # image[:, :, 2] = r
 
         b, g, r = cv2.split(image)
 
@@ -183,7 +167,6 @@ class MenuScreen(Screen):
 
     def genHist(self, image, hist_w, hist_h):
         # Initial variables
-        print(image.dtype)
         histSize = 256
         histRange = (0, 256)
         bgr_planes = cv2.split(image)

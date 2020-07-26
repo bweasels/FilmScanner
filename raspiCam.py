@@ -1,6 +1,9 @@
 from picamera.array import PiRGBArray
 from picamera import PiCamera
 from threading import Thread
+import time
+from pydng.core import RPICAM2DNG
+from io import BytesIO
 
 
 class RaspiVid:
@@ -87,3 +90,62 @@ class RaspiVid:
         self.shutterSpeed = shutterSpeed
         self.iso = iso
         self.awbMode = awbMode
+
+class RaspiCam:
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        # Set up the camera
+        self.res = (800, 640)
+        self.previewExposure = False
+
+        self.camera = PiCamera(sensor_mode=3)
+        self.camera.awb_mode = 'off'
+        self.camera.iso = 100
+
+        # set up variables for this
+        self.frame = None
+        self.stopped = False
+
+    def capture(self, fname):
+        # Start the thread to pull frames from the video stream
+        Thread(target=self._capture, args=fname).start()
+        return self
+
+    def _capture(self, fname):
+        stream = BytesIO()
+        self.camera.start_preview()
+        time.sleep(0.1)
+        self.camera.capture(stream, 'jpeg', bayer=True)
+        d = RPICAM2DNG()
+        output = d.convert(stream)
+        with open('file.dng', 'wb') as f:
+            f.write(output)
+        time.sleep(10)
+        self.camera.stop_preview()
+
+        stream.close()
+        self.camera.close()
+
+    @property
+    def shutterSpeed(self):
+        return self.camera.shutter_speed
+
+    @shutterSpeed.setter
+    def shutterSpeed(self, value):
+        self.camera.shutter_speed = value
+
+    @property
+    def iso(self):
+        return self.camera.iso
+
+    @iso.setter
+    def iso(self, value):
+        self.camera.iso = value
+
+    @property
+    def exposureComp(self):
+        return self.camera.exposureComp
+
+    @exposureComp.setter
+    def exposureComp(self, value):
+        self.camera.exposure_compensation = value

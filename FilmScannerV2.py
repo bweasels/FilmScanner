@@ -16,7 +16,7 @@ import cv2
 import numpy as np
 
 # Import raspicam classes from files
-from raspiCam import RaspiVid
+from raspiCam import RaspiVid, RaspiCam
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
@@ -221,6 +221,23 @@ class CamApp(App):
 
     def stop(self):
         self.stream.stop()
+
+    def captureImage(self):
+        # Stop the menu, and then the video feed & get the current settings from the stream
+        self.root.manager.get_screen('main').stop()
+        self.stream.stop()
+        shutterSpeed = self.stream.shutterSpeed
+        ev = self.stream.exposure_comp
+
+        # Start the camera and apply the settings
+        self.camera = RaspiCam()
+        self.camera.shutterSpeed = shutterSpeed
+        self.camera.exposureComp = ev
+        self.camera.capture('fname.dng')
+
+        # restart the stream and the main screen
+        self.stream.start()
+        self.root.manager.get_screen('main').start()
 
 
 if __name__ == '__main__':

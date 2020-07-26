@@ -28,6 +28,22 @@ WindowManager:
             size_hint: (0.1, 0.1)
             pos: (0, 576)
 
+        Button:
+            id: capture
+            text: "capture"
+            font_size: 40
+            size_hint: (0.4, 0.4)
+            pos: (800*0.3, 640*0.3)
+            background_color: (0, 0, 0, 0)
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 1
+                Line:
+                    width: 2
+                    rectangle: self.x, self.y, self.width, self.height
+            on_release:
+                app.captureImage()
+
 <MenuScreen>:
     name: 'menu'
     FloatLayout:
