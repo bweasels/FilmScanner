@@ -224,6 +224,23 @@ class CamApp(App):
         self.stream.stop()
         # self.imgProcessor.stop()
 
+    def captureImage(self):
+        self.root.get_screen('main').stop()
+        self.stream.stop()
+        shutterSpeed = self.stream.shutterSpeed
+        ev = self.stream.exposure_comp
+        print('shutter speed: ' + str(shutterSpeed) + " | Exposure Comp: ", str(ev))
+        # Start the camera and apply the settings
+        # self.camera = RaspiCam()
+        # self.camera.shutterSpeed = shutterSpeed
+        # self.camera.exposureComp = ev
+        # self.camera.capture('fname.dng')
+
+        # restart the stream and the main screen
+        self.stream.start()
+        self.root.get_screen('main').start()
+
+
 
 if __name__ == '__main__':
     CamApp().run()

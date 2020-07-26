@@ -224,7 +224,7 @@ class CamApp(App):
 
     def captureImage(self):
         # Stop the menu, and then the video feed & get the current settings from the stream
-        self.root.manager.get_screen('main').stop()
+        self.root.get_screen('main').stop()
         self.stream.stop()
         shutterSpeed = self.stream.shutterSpeed
         ev = self.stream.exposure_comp
@@ -237,7 +237,7 @@ class CamApp(App):
 
         # restart the stream and the main screen
         self.stream.start()
-        self.root.manager.get_screen('main').start()
+        self.root.get_screen('main').start()
 
 
 if __name__ == '__main__':
