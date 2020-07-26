@@ -31,22 +31,32 @@ def processImage(image, invert, WBPoint=None):
     image = cv2.flip(image, 0)
 
     if WBPoint is not None:
-        # Split image into channels (array notation is more efficient than cv2.split
-        b = image[:, :, 0]
-        g = image[:, :, 1]
-        r = image[:, :, 2]
+        # # Split image into channels (array notation is more efficient than cv2.split
+        # b = image[:, :, 0]
+        # g = image[:, :, 1]
+        # r = image[:, :, 2]
+        #
+        # # Find the overall luminance of the image to correct to when white balancing
+        # lum = (b + g + r) / 3
+        #
+        # # perform the white balance, and overwrite the channels
+        # b = b * lum / WBPoint[0]
+        # g = g * lum / WBPoint[1]
+        # r = r * lum / WBPoint[2]
+        #
+        # image[:, :, 0] = b
+        # image[:, :, 1] = g
+        # image[:, :, 2] = r
 
-        # Find the overall luminance of the image to correct to when white balancing
-        lum = (b + g + r) / 3
+        b, g, r = cv2.split(image)
 
-        # perform the white balance, and overwrite the channels
-        b = b * lum / WBPoint[0]
-        g = g * lum / WBPoint[1]
-        r = r * lum / WBPoint[2]
+        lum = (WBPoint[0] + WBPoint[1] + WBPoint[2]) / 3
 
-        image[:, :, 0] = b
-        image[:, :, 1] = g
-        image[:, :, 2] = r
+        b = (lum / WBPoint[0]) * b
+        g = (lum / WBPoint[1]) * g
+        r = (lum / WBPoint[2]) * r
+
+        image = np.uint8(cv2.merge((b, g, r)))
 
     # If invert button is pressed, flip that puppy
     if invert:
@@ -72,7 +82,6 @@ class MainScreen(Screen):
         self.start()
 
     def start(self):
-        cv2.waitKey(1)
         self._clock = Clock.schedule_interval(self.animate, 1.0 / self.framerate)
 
     def stop(self):
@@ -165,15 +174,16 @@ class MenuScreen(Screen):
         image = cv2.resize(image, (720, 576))
 
         # Process the image according to user inputs
-        # image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
-        image = App.get_running_app().imgProcessor.getImage()
-        texture = App.get_running_app().imgProcessor.getTexture()
+        image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
+        # image = App.get_running_app().imgProcessor.getImage()
+        # texture = App.get_running_app().imgProcessor.getTexture()
 
         self.ids.background.texture = texture
         self.ids.hist.texture = self.genHist(image, 720, 576)
 
     def genHist(self, image, hist_w, hist_h):
         # Initial variables
+        print(image.dtype)
         histSize = 256
         histRange = (0, 256)
         bgr_planes = cv2.split(image)
@@ -219,16 +229,17 @@ class WindowManager(ScreenManager):
 class CamApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.stream = None
+        self.stream = DummyVid().start()
         self.imgProcessor = None
 
     def build(self):
-        self.stream = DummyVid().start()
-        self.imgProcessor = ImageProcessor().start(self.stream)
+        # self.stream = DummyVid().start()
+        # self.imgProcessor = ImageProcessor().start(self.stream)
+        pass
 
     def stop(self):
         self.stream.stop()
-        self.imgProcessor.stop()
+        # self.imgProcessor.stop()
 
 
 if __name__ == '__main__':

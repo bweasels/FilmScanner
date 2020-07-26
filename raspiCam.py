@@ -2,6 +2,7 @@ from picamera.array import PiRGBArray
 from picamera import PiCamera
 from threading import Thread
 
+
 class RaspiVid:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -86,5 +87,3 @@ class RaspiVid:
         self.shutterSpeed = shutterSpeed
         self.iso = iso
         self.awbMode = awbMode
-
-

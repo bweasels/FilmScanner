@@ -35,7 +35,7 @@ def processImage(image, invert, WBPoint=None):
         g = (lum / WBPoint[1]) * g
         r = (lum / WBPoint[2]) * r
 
-        image = cv2.merge((b, g, r))
+        image = np.uint8(cv2.merge((b, g, r)))
 
     # If invert button is pressed, flip that puppy
     if invert:
