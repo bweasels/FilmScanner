@@ -16,6 +16,11 @@ from threading import Thread
 # Image processing imports
 import cv2
 import numpy as np
+import time
+
+# Class imports
+from dummyCam import DummyVid
+from ImageProcessing import ImageProcessor
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
@@ -67,6 +72,7 @@ class MainScreen(Screen):
         self.start()
 
     def start(self):
+        cv2.waitKey(1)
         self._clock = Clock.schedule_interval(self.animate, 1.0 / self.framerate)
 
     def stop(self):
@@ -85,8 +91,7 @@ class MainScreen(Screen):
         self._whitePoint = value
 
     def animate(self, dt):
-        image = np.zeros((640, 800, 3), np.uint8)
-        image = image + 25
+        image = App.get_running_app().stream.getFrame()
 
         # Set the texture and update the fps counter
         image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
@@ -142,10 +147,7 @@ class MenuScreen(Screen):
 
     def animate(self, dt):
         # Make a dummy image for me
-        image = np.zeros((640, 800, 3), np.uint8)
-        image[:, :, 0] = image[:, :, 0] + 25
-        image[:, :, 1] = image[:, :, 1] + 50
-        image[:, :, 2] = image[:, :, 2] + 75
+        image = App.get_running_app().stream.getFrame()
 
         # If capturing wb point get it here
         if self._wbCapture:
@@ -163,7 +165,10 @@ class MenuScreen(Screen):
         image = cv2.resize(image, (720, 576))
 
         # Process the image according to user inputs
-        image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
+        # image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
+        image = App.get_running_app().imgProcessor.getImage()
+        texture = App.get_running_app().imgProcessor.getTexture()
+
         self.ids.background.texture = texture
         self.ids.hist.texture = self.genHist(image, 720, 576)
 
@@ -214,10 +219,19 @@ class WindowManager(ScreenManager):
 class CamApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+        self.stream = None
+        self.imgProcessor = None
 
     def build(self):
-        pass
+        self.stream = DummyVid().start()
+        self.imgProcessor = ImageProcessor().start(self.stream)
+
+    def stop(self):
+        self.stream.stop()
+        self.imgProcessor.stop()
 
 
 if __name__ == '__main__':
     CamApp().run()
+    CamApp().stop()
+    quit()

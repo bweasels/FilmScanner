@@ -86,3 +86,5 @@ class RaspiVid:
         self.shutterSpeed = shutterSpeed
         self.iso = iso
         self.awbMode = awbMode
+
+

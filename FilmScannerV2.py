@@ -21,27 +21,21 @@ from raspiCam import RaspiVid
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
 
+
 def processImage(image, invert, WBPoint=None):
     # For some reason, openCV's images are flipped for Kivy
     image = cv2.flip(image, 0)
 
     if WBPoint is not None:
-        # Split image into channels (array notation is more efficient than cv2.split
-        b = image[:, :, 0]
-        g = image[:, :, 1]
-        r = image[:, :, 2]
+        b, g, r = cv2.split(image)
 
-        # Find the overall luminance of the image to correct to when white balancing
-        lum = (b + g + r) / 3
+        lum = (WBPoint[0] + WBPoint[1] + WBPoint[2]) / 3
 
-        # perform the white balance, and overwrite the channels
-        b = b * lum / WBPoint[0]
-        g = g * lum / WBPoint[1]
-        r = r * lum / WBPoint[2]
+        b = (lum / WBPoint[0]) * b
+        g = (lum / WBPoint[1]) * g
+        r = (lum / WBPoint[2]) * r
 
-        image[:, :, 0] = b
-        image[:, :, 1] = g
-        image[:, :, 2] = r
+        image = cv2.merge((b, g, r))
 
     # If invert button is pressed, flip that puppy
     if invert:
@@ -57,7 +51,7 @@ def processImage(image, invert, WBPoint=None):
 class MainScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self.framerate = 32
+        self.framerate = 20
         self._clock = None
         self._invert = False
 
@@ -101,7 +95,7 @@ class MenuScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._clock = None
-        self._framerate = 32
+        self._framerate = 20
         self._invert = False
 
         # A variety of properties for white balance control
@@ -205,8 +199,10 @@ class MenuScreen(Screen):
         texture.blit_buffer(buffer, colorfmt='bgra', bufferfmt='ubyte')
         return texture
 
+
 class WindowManager(ScreenManager):
     pass
+
 
 class CamApp(App):
     def __init__(self, **kwargs):
@@ -223,5 +219,11 @@ class CamApp(App):
         cpu = CPUTemperature()
         print(cpu.temperature)
 
+    def stop(self):
+        self.stream.stop()
+
+
 if __name__ == '__main__':
     CamApp().run()
+    CamApp().stop()
+    quit()

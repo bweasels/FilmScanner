@@ -1,32 +1,38 @@
 import cv2
 import numpy as np
 from kivy.graphics.texture import Texture
+from threading import Thread
 
 
-class imageProcessor:
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
+class ImageProcessor:
+    def __init__(self):
 
         self._wbPoint = (255, 255, 255)
         self._wbActivate = False
         self._invert = False
         self._texture = None
+        self._image = None
+        self._stream = None
 
         self.running = True
 
-    def start(self):
+    def start(self, stream):
         # Start the thread to pull frames from the video stream
-        Thread(target=self._update, args=()).start()
+        self._stream = stream
+        Thread(target=self.process, args=()).start()
         return self
 
     def stop(self):
         # tell the class to shutdown
-        self.stopped = False
+        self.running = False
 
-    def process(self, stream):
-        while self.running
+    def process(self):
+        while self.running:
+            image = self._stream.getFrame()
+            print(self._stream.iso)
+            self.processImage(image)
 
-    def processImage(self):
+    def processImage(self, image):
         # For some reason, openCV's images are flipped for Kivy
         image = cv2.flip(image, 0)
 
@@ -55,9 +61,13 @@ class imageProcessor:
         texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
         texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
         self._texture = texture
+        self._image = image
 
     def getTexture(self):
         return self._texture
+
+    def getImage(self):
+        return self._image
 
     def activateWB(self):
         self._wbActivate = not self._wbActivate
