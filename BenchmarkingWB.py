@@ -2,7 +2,7 @@
 import numpy as np
 import cv2
 
-
+# F1, F2, F3 are testing various array splitting and combining methods
 def f1(image, pixel):
     b = image[:, :, 0]
     g = image[:, :, 1]
@@ -43,6 +43,31 @@ def f3(image, pixel):
     image = np.dstack((b, g, r))
     return image
 
+# F4 and F5 test if pre calculating lum/pixel is faster or slower based on the result that f2 is fastest
+def f4(image, pixel):
+    b, g, r = cv2.split(image)
+
+    lum = (pixel[0] + pixel[1] + pixel[2]) / 3
+
+    b = b * lum / pixel[0]
+    g = g * lum / pixel[1]
+    r = r * lum / pixel[2]
+
+    image = cv2.merge((b, g, r))
+    return image
+
+def f5(image, pixel):
+    b, g, r = cv2.split(image)
+
+    lum = (pixel[0] + pixel[1] + pixel[2]) / 3
+
+    b = (lum / pixel[0]) * b
+    g = (lum / pixel[1]) * g
+    r = (lum / pixel[2]) * r
+
+    image = cv2.merge((b, g, r))
+    return image
+
 
 # Doing a couple initial imshows to make sure that this works
 img = np.zeros((640, 800, 3), np.uint8)
@@ -52,8 +77,8 @@ img[:, :, 2] = img[:, :, 2] + 75
 wbPixel = (75, 75, 75)
 
 # cv2.imshow("Initial Image", img)
-# cv2.imshow('F1', f1(img, wbPixel))
-# cv2.imshow("F2", f2(img, wbPixel))
+# cv2.imshow('F4', f4(img, wbPixel))
+# cv2.imshow("F5", f5(img, wbPixel))
 # cv2.imshow('F3', f3(img, wbPixel))
 # cv2.waitKey()
 
@@ -62,7 +87,7 @@ import time
 import random
 import statistics
 
-functions = f1, f2, f3
+functions = f4, f5
 times = {f.__name__: [] for f in functions}
 
 for i in range(10000):  # adjust accordingly so whole thing takes a few sec
