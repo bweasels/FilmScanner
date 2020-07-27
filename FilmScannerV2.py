@@ -142,6 +142,7 @@ class CamApp(App):
     def stop(self):
         self.stream.stop()
         Clock.unschedule(self.tempMonitor)
+        GPIO.cleanup()
 
     def captureImage(self):
         # Stop the menu, get the current settings from the stream, and stop the stream
