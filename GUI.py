@@ -25,13 +25,11 @@ from ImageProcessing import ImageProcessor
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
 
-class MainScreen(Screen):
+class BaseScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.framerate = 32
         self._clock = None
-
-        self.start()
 
     def start(self):
         self._clock = Clock.schedule_interval(self.animate, 1.0 / self.framerate)
@@ -48,21 +46,15 @@ class MainScreen(Screen):
         self.ids.fps.text = str(round(1 / dt, 1))
 
 
-class MenuScreen(Screen):
+class MainScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
-        self._clock = None
-        self._framerate = 32
-        self._invert = False
+        self.start()
 
-
+class MenuScreen(BaseScreen):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         self._wbPoint = (0, 0)
-
-    def start(self):
-        self._clock = Clock.schedule_interval(self.animate, 1.0 / self._framerate)
-
-    def stop(self):
-        Clock.unschedule(self._clock)
 
     def animate(self, dt):
         image, texture = App.get_running_app().stream.processImage()
