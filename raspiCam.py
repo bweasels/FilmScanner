@@ -1,9 +1,18 @@
+# Kivy import
+from kivy.graphics.texture import Texture
+
+# Raspicam and DNG Converter imports
 from picamera.array import PiRGBArray
 from pydng.core import RPICAM2DNG
 from picamera import PiCamera
+
+# Basic Python IO Imports
 from threading import Thread
 from io import BytesIO
+import numpy as np
 import time
+
+# OpenCV
 import cv2
 
 
@@ -131,6 +140,7 @@ class RaspiVid:
         self.iso = iso
         self.awbMode = awbMode
 
+
 class RaspiCam:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
@@ -149,7 +159,7 @@ class RaspiCam:
 
     def capture(self, fname):
         # Start the thread to pull frames from the video stream
-        Thread(target=self._capture, args=(fname)).start()
+        Thread(target=self._capture, args=fname).start()
         return self
 
     def _capture(self, fname):
