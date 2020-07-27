@@ -51,13 +51,13 @@ class MenuScreen(BaseScreen):
     def on_touch_up(self, touch):
 
         # On touch if within the image, gather the 10x10 grid of pixels and get average bgr for wb
-        if (touch.pos[0] < 384.0) & (touch.pos[1] > 128.0):
+        if (64.0 < touch.pos[0] < 576.0) & (touch.pos[1] > 96.0):
             # Get the ratio between the onscreen image and actual image
             xRatio = 800.0 / 640.0
             yRatio = 640.0 / 384.0
 
             # Use the ratio and offsets to get the full image size
-            wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 128) * yRatio))
+            wbPoint = (round((touch.pos[0] - 64) * xRatio), round((touch.pos[1] - 96) * yRatio))
 
             # Get a full sized screen grab and sample the 10x10 area
             image = App.get_running_app().stream.getFrame()
@@ -135,7 +135,7 @@ class CamApp(App):
         cpu = CPUTemperature()
         roomTemp = 25
         maxTemp = 85
-        self.fan.start(100*(cpu.temperature-roomTemp)/(maxTemp - roomTemp))
+        self.fan.start(100 * (cpu.temperature - roomTemp) / (maxTemp - roomTemp))
 
     def stop(self):
         self.stream.stop()
