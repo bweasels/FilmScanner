@@ -1,63 +1,52 @@
-import wiringpi
+import RPi.GPIO as GPIO
 import time
 
+
+FAN_PIN = 18
+WAIT_TIME = 1
+PWM_FREQ = 25000
 print("hello")
 
-wiringpi.wiringPiSetupGpio()
-
-wiringpi.pwmSetMode(1) # PWM_MODE_MS = 1
+GPIO.setmode(GPIO.BCM)
+GPIO.setup(FAN_PIN, GPIO.OUT, initial=GPIO.LOW)
+fan = GPIO.PWM(FAN_PIN, PWM_FREQ)
 
 print('setupgpIO')
 
-wiringpi.pinMode(18, 2)      # pwm only works on GPIO port 18
-
-print("pwm mode set")
-
-wiringpi.pullUpDnControl(18, 2) # 0=None; 1=Pull Down; 2=Pull Up
-
-print("Pwm pull up active")
-
-wiringpi.pwmSetClock(4)  # this parameters correspond to 25kHz
-
-print("pwm clock set")
-wiringpi.pwmSetRange(128)
-
 print("pwm range set")
 
-wiringpi.pwmWrite(18, 76) # minimum RPM
+fan.start(40)
 
 print("Min RPM")
 time.sleep(5)
 
-wiringpi.pwmWrite(18, 80)   # mid RPM
+fan.start(70)
 
 print("Mid 1 RPM")
 time.sleep(5)
 
-wiringpi.pwmWrite(18, 90)   # mid RPM
-
+fan.start(80)
 print("Mid 2 RPM")
 time.sleep(5)
 
-wiringpi.pwmWrite(18, 100)   # mid RPM
+fan.start(90)
 
 print("Mid 3 RPM")
 time.sleep(5)
 
-wiringpi.pwmWrite(18, 110)   # mid RPM
+fan.start(100)   # mid RPM
 
 print("Mid 4 RPM")
 time.sleep(5)
 
-wiringpi.pwmWrite(18, 120)   # mid RPM
+fan.start(110)
 
 print("High RPM")
 time.sleep(5)
 
-wiringpi.pwmWrite(18, 128)  # maximum RPM
-
+fan.start(128)
 print("Max RPM")
 time.sleep(5)
 
-wiringpi.pwmWrite(18, 0)
-wiringpi.pinMode(18, 0)
+print("done!")
+quit()
