@@ -1,12 +1,17 @@
-# Kivy graphics imports
+# Kivy core mechanism imports
 from kivy.app import App
-from kivy.uix.image import Image
 from kivy.clock import Clock
+from kivy.config import Config
+from kivy.core.window import Window
+
+# Kivy pre-made object imports
+from kivy.uix.image import Image
 from kivy.uix.button import Button
 from kivy.uix.slider import Slider
 from kivy.graphics.texture import Texture
+
+# Screen manager
 from kivy.uix.screenmanager import ScreenManager, Screen
-from kivy.config import Config
 
 # raspberry pi imports
 from gpiozero import CPUTemperature
@@ -19,6 +24,8 @@ import numpy as np
 from raspiCam import RaspiVid, RaspiCam
 from CustomGUIClasses import BaseScreen
 
+# Graphical properties
+Window.fullscreen = True
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
 
