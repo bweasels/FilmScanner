@@ -17,8 +17,8 @@ import cv2
 
 
 class RaspiVid:
-        super().__init__(**kwargs)    def __init__(self, **kwargs):
-
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
         # Set up the camera
         self.res = (640, 480)
         self.previewExposure = False
