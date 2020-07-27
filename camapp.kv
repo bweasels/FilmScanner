@@ -73,7 +73,7 @@ WindowManager:
                 root.manager.current = 'main'
                 root.manager.get_screen('main').start()
 
-        Button:
+        ToggleButton:
             id: invert
             text: "Invert\nColors"
             font_size: 30
@@ -85,7 +85,7 @@ WindowManager:
             on_release:
                 app.stream.invert()
 
-        Button:
+        ToggleButton:
             id: wbactivate
             text: "White\nBalance"
             font_size: 30
@@ -106,7 +106,9 @@ WindowManager:
             orientation: 'vertical'
             pos: (640, 165)
             size_hint: (0.2, 0.6)
-            on_value: app.stream.exposure_comp = self.value
+            on_value:
+                app.stream.exposure_comp = self.value
+                print(self.value)
 
         Label:
             id: exposureLabel:

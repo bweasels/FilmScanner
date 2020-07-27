@@ -3,6 +3,7 @@ from kivy.app import App
 from kivy.uix.image import Image
 from kivy.clock import Clock
 from kivy.uix.button import Button
+from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.slider import Slider
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen
@@ -20,15 +21,17 @@ import time
 
 # Class imports
 from dummyCam import DummyVid
-from baseScreen import BaseScreen
+from CustomGUIClasses import BaseScreen
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
+
 
 class MainScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.start()
+
 
 class MenuScreen(BaseScreen):
     def __init__(self, **kwargs):
@@ -42,21 +45,19 @@ class MenuScreen(BaseScreen):
         self.ids.hist.texture = self.genHist(image, 720, 576)
 
     def on_touch_up(self, touch):
-
         # On touch if within the image, gather the 10x10 grid of pixels and get average bgr for wb
-        if (touch.pos[0] < 700.0) & (touch.pos[1] > 110.0):
-
+        if (touch.pos[0] < 640.0) & (touch.pos[1] > 128.0):
             # Get the ratio between the onscreen image and actual image
-            xRatio = 800.0 / 700.0
-            yRatio = 640.0 / 540.0
+            xRatio = 800.0 / 640.0
+            yRatio = 640.0 / 512.0
 
             # Use the ratio and offsets to get the full image size
             wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
 
             # Get a full sized screen grab and sample the 10x10 area
             image = App.get_running_app().stream.getFrame()
-            sample = image[wbPoint[1]-5: wbPoint[1]+5,
-                     wbPoint[0]-5: wbPoint[0]+5, :]
+            sample = image[wbPoint[1] - 5: wbPoint[1] + 5,
+                     wbPoint[0] - 5: wbPoint[0] + 5, :]
 
             # average it and set wb
             wbPixel = np.mean(sample, axis=(0, 1))
@@ -132,7 +133,6 @@ class CamApp(App):
         # restart the stream and the main screen
         self.stream.start()
         self.root.get_screen('main').start()
-
 
 
 if __name__ == '__main__':
