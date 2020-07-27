@@ -28,7 +28,7 @@ from CustomGUIClasses import BaseScreen
 # Graphical properties
 # Window.fullscreen = True
 Config.set('graphics', 'width', '800')
-Config.set('graphics', 'height', '640')
+Config.set('graphics', 'height', '480')
 
 
 class MainScreen(BaseScreen):
@@ -46,18 +46,18 @@ class MenuScreen(BaseScreen):
         image, texture = App.get_running_app().stream.processImage()
 
         self.ids.background.texture = texture
-        self.ids.hist.texture = self.genHist(image, 720, 576)
+        self.ids.hist.texture = self.genHist(image, 800, 480)
 
     def on_touch_up(self, touch):
 
         # On touch if within the image, gather the 10x10 grid of pixels and get average bgr for wb
-        if (touch.pos[0] < 640.0) & (touch.pos[1] > 128.0):
+        if (touch.pos[0] < 384.0) & (touch.pos[1] > 128.0):
             # Get the ratio between the onscreen image and actual image
             xRatio = 800.0 / 640.0
-            yRatio = 640.0 / 512.0
+            yRatio = 640.0 / 384.0
 
             # Use the ratio and offsets to get the full image size
-            wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
+            wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 128) * yRatio))
 
             # Get a full sized screen grab and sample the 10x10 area
             image = App.get_running_app().stream.getFrame()

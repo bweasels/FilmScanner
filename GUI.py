@@ -52,7 +52,7 @@ class MenuScreen(BaseScreen):
             yRatio = 640.0 / 384.0
 
             # Use the ratio and offsets to get the full image size
-            wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
+            wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 128) * yRatio))
 
             # Get a full sized screen grab and sample the 10x10 area
             image = App.get_running_app().stream.getFrame()
