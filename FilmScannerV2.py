@@ -15,6 +15,7 @@ from kivy.uix.screenmanager import ScreenManager, Screen
 
 # raspberry pi imports
 from gpiozero import CPUTemperature
+import RPi.GPIO as GPIO
 
 # Image processing imports
 import cv2
@@ -114,9 +115,17 @@ class WindowManager(ScreenManager):
 class CamApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
+
+        # start the camera stream
         self.stream = RaspiVid().start()
+
+        # Set up the pwm pin managing the fan
+        GPIO.setmode(GPIO.BOARD)
+        GPIO.setup(12, GPIO.OUT, initial=40)
+        self.fan = GPIO.PWM(12, 25000)
+
+        # schedule temp monitor to only fire every second
         self.tempMonitor = Clock.schedule_interval(self.monitorTemp, 1.0)
-        cv2.waitKey(1)
         # self.stream.settings(shutterSpeed=10, iso=100, awbMode='sunlight')
 
     def build(self):
@@ -124,10 +133,13 @@ class CamApp(App):
 
     def monitorTemp(self, dt):
         cpu = CPUTemperature()
-        print(cpu.temperature)
+        roomTemp = 25
+        maxTemp = 85
+        self.fan.start(100*(cpu.temperature-roomTemp)/(maxTemp - roomTemp))
 
     def stop(self):
         self.stream.stop()
+        Clock.unschedule(self.tempMonitor)
 
     def captureImage(self):
         # Stop the menu, get the current settings from the stream, and stop the stream

@@ -2,12 +2,12 @@ import RPi.GPIO as GPIO
 import time
 
 
-FAN_PIN = 18
+FAN_PIN = 12
 WAIT_TIME = 1
 PWM_FREQ = 25000
 print("hello")
 
-GPIO.setmode(GPIO.BCM)
+GPIO.setmode(GPIO.BOARD)
 GPIO.setup(FAN_PIN, GPIO.OUT, initial=GPIO.LOW)
 fan = GPIO.PWM(FAN_PIN, PWM_FREQ)
 
