@@ -8,14 +8,14 @@ WindowManager:
         Image:
             id: background
             anim_delay: 0.00
-            size: (800, 640)
+            size: (640, 480)
             pos: (0, 0)
         Button:
             id: menu
             text: "Menu"
             font_size: 40
             size_hint: (0.2, 0.2)
-            pos: (800 * 0.8, 640 * 0.8)
+            pos: (800 * 0.8, 480 * 0.8)
             background_color: (0.5, 0.5, 0.5, 0.25)
             on_release:
                 root.stop()
@@ -26,14 +26,14 @@ WindowManager:
             id: fps
             text: "0"
             size_hint: (0.1, 0.1)
-            pos: (0, 576)
+            pos: (0, 432)
 
         Button:
             id: capture
             text: "capture"
             font_size: 40
             size_hint: (0.4, 0.4)
-            pos: (800*0.3, 640*0.3)
+            pos: (800*0.3, 480*0.3)
             background_color: (0, 0, 0, 0)
             canvas.before:
                 Color:
@@ -50,12 +50,12 @@ WindowManager:
         Image:
             id: background
             anim_delay: 0.00
-            pos: (0, 128)
+            pos: (0, 96)
             size_hint: (0.8, 0.8)
 
         Image:
             id: hist
-            pos: (0, 128)
+            pos: (0, 96)
             size_hint: (0.8, 0.8)
 
         Button:
@@ -104,7 +104,7 @@ WindowManager:
             step: 1
             value: 0
             orientation: 'vertical'
-            pos: (640, 165)
+            pos: (640, 110)
             size_hint: (0.2, 0.6)
             on_value:
                 app.stream.exposure_comp = self.value
@@ -114,7 +114,7 @@ WindowManager:
             id: exposureLabel:
             text: "Exposure\nComp"
             font_size: 24
-            pos: (640, 540)
+            pos: (640, 380)
             size_hint: (0.2, 0.2)
             halign: 'center'
             valign: 'middle'

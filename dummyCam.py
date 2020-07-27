@@ -8,7 +8,7 @@ class DummyVid:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Set up the camera
-        self.res = (800, 640)
+        self.res = (640, 480)
         self.previewExposure = False
 
         # set up variables for this
@@ -38,7 +38,7 @@ class DummyVid:
     def _update(self):
         while not self.stopped:
             # Start the thread to pull frames from the video stream
-            img = np.zeros((640, 800, 3), np.uint8)
+            img = np.zeros((480, 640, 3), np.uint8)
             img[:, :, 0] = img[:, :, 0] + 75
             img[:, :, 1] = img[:, :, 1] + 50
             img[:, :, 2] = img[:, :, 2] + 12

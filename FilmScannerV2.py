@@ -26,7 +26,7 @@ from raspiCam import RaspiVid, RaspiCam
 from CustomGUIClasses import BaseScreen
 
 # Graphical properties
-Window.fullscreen = True
+# Window.fullscreen = True
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
 
