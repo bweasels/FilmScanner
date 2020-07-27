@@ -27,6 +27,10 @@ from CustomGUIClasses import BaseScreen
 
 # Graphical properties
 # Window.fullscreen = True
+
+Config.set('graphics', 'resizable', 0)
+Window.size = (800, 480)
+
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 

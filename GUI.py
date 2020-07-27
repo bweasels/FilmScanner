@@ -5,6 +5,7 @@ from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.uix.togglebutton import ToggleButton
 from kivy.uix.slider import Slider
+from kivy.core.window import Window
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen
 from kivy.config import Config
@@ -23,6 +24,8 @@ import time
 from dummyCam import DummyVid
 from CustomGUIClasses import BaseScreen
 
+Config.set('graphics', 'resizable', 0)
+Window.size = (800, 480)
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '480')
 
