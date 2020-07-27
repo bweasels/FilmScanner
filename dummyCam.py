@@ -1,5 +1,7 @@
 from threading import Thread
 import numpy as np
+import cv2
+from kivy.graphics.texture import Texture
 
 
 class DummyVid:
@@ -13,15 +15,25 @@ class DummyVid:
         self.frame = None
         self.stopped = False
 
+        # variables for image capture
         self._iso = 0
         self._shutterSpeed = 0
         self._awbMode = 'Dummy'
         self._exposure_comp = 0
 
+        # variables for image post processing
+        self._invert = False
+        self._wb = False
+        self._wbPixel = (255, 255, 255)
+
     def start(self):
         # Start the thread to pull frames from the video stream
         Thread(target=self._update, args=()).start()
         return self
+
+    def stop(self):
+        # tell the class to shutdown
+        self.stopped = True
 
     def _update(self):
         while not self.stopped:
@@ -35,9 +47,39 @@ class DummyVid:
     def getFrame(self):
         return self.frame
 
-    def stop(self):
-        # tell the class to shutdown
-        self.stopped = True
+    def processImage(self):
+        # For some reason, openCV's images are flipped for Kivy, either way capture it
+        image = cv2.flip(self.getFrame(), 0)
+
+        if self._wb:
+            b, g, r = cv2.split(image)
+
+            lum = (self._wbPixel[0] + self._wbPixel[1] + self._wbPixel[2]) / 3
+
+            b = (lum / self._wbPixel[0]) * b
+            g = (lum / self._wbPixel[1]) * g
+            r = (lum / self._wbPixel[2]) * r
+
+            image = np.uint8(cv2.merge((b, g, r)))
+
+        # If invert button is pressed, flip that puppy
+        if self._invert:
+            image = cv2.bitwise_not(image)
+
+        # This is all code to convert it to a bitstream for Kivy
+        buffer = image.tostring()
+        texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
+        texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
+        return image, texture
+
+    def invert(self):
+        self._invert = not self._invert
+
+    def activateWB(self):
+        self._wb = not self._wb
+
+    def setWBPixel(self, value):
+        self._wbPixel = value
 
     @property
     def iso(self):

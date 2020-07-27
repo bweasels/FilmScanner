@@ -25,43 +25,11 @@ from ImageProcessing import ImageProcessor
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
 
-
-def processImage(image, invert, WBPoint=None):
-    # For some reason, openCV's images are flipped for Kivy
-    image = cv2.flip(image, 0)
-
-    if WBPoint is not None:
-
-        b, g, r = cv2.split(image)
-
-        lum = (WBPoint[0] + WBPoint[1] + WBPoint[2]) / 3
-
-        b = (lum / WBPoint[0]) * b
-        g = (lum / WBPoint[1]) * g
-        r = (lum / WBPoint[2]) * r
-
-        image = np.uint8(cv2.merge((b, g, r)))
-
-    # If invert button is pressed, flip that puppy
-    if invert:
-        image = cv2.bitwise_not(image)
-
-    # This is all code to convert it to a bitstream for Kivy
-    buffer = image.tostring()
-    texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-    texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
-    return image, texture
-
-
 class MainScreen(Screen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.framerate = 32
         self._clock = None
-        self._invert = False
-
-        self._wb = None
-        self._whitePoint = (255, 255, 255)
 
         self.start()
 
@@ -71,24 +39,12 @@ class MainScreen(Screen):
     def stop(self):
         Clock.unschedule(self._clock)
 
-    def invert(self):
-        self._invert = not self._invert
-
-    def activateWB(self):
-        if np.all(self._wb == self._whitePoint):
-            self._wb = None
-        else:
-            self._wb = self._whitePoint
-
-    def setWhitePoint(self, value):
-        self._whitePoint = value
-
     def animate(self, dt):
-        image = App.get_running_app().stream.getFrame()
-
-        # Set the texture and update the fps counter
-        image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
+        # Get the processed image and save texture
+        image, texture = App.get_running_app().stream.processImage()
         self.ids.background.texture = texture
+
+        # Write out fps for our information
         self.ids.fps.text = str(round(1 / dt, 1))
 
 
@@ -99,10 +55,7 @@ class MenuScreen(Screen):
         self._framerate = 32
         self._invert = False
 
-        # A variety of properties for white balance control
-        self._wb = None
-        self._whitePoint = (255, 255, 255)
-        self._wbCapture = False
+
         self._wbPoint = (0, 0)
 
     def start(self):
@@ -111,23 +64,15 @@ class MenuScreen(Screen):
     def stop(self):
         Clock.unschedule(self._clock)
 
-    def invert(self):
-        self._invert = not self._invert
+    def animate(self, dt):
+        image, texture = App.get_running_app().stream.processImage()
 
-    def activateWB(self):
-        if np.all(self._wb == self._whitePoint):
-            self._wb = None
-        else:
-            self._wb = self._whitePoint
-
-    def setWhitePoint(self, value):
-        self._whitePoint = value
-
-    def getWhitePoint(self):
-        return self._whitePoint
+        self.ids.background.texture = texture
+        self.ids.hist.texture = self.genHist(image, 720, 576)
 
     def on_touch_up(self, touch):
-        # On touch if within the image, gather the 5x5 grid of pixels and get average bgr for wb
+
+        # On touch if within the image, gather the 10x10 grid of pixels and get average bgr for wb
         if (touch.pos[0] < 700.0) & (touch.pos[1] > 110.0):
 
             # Get the ratio between the onscreen image and actual image
@@ -135,35 +80,16 @@ class MenuScreen(Screen):
             yRatio = 640.0 / 540.0
 
             # Use the ratio and offsets to get the full image size
-            self._wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
-            self._wbCapture = True
+            wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
 
-    def animate(self, dt):
-        # Make a dummy image for me
-        image = App.get_running_app().stream.getFrame()
+            # Get a full sized screen grab and sample the 10x10 area
+            image = App.get_running_app().stream.getFrame()
+            sample = image[wbPoint[1]-5: wbPoint[1]+5,
+                     wbPoint[0]-5: wbPoint[0]+5, :]
 
-        # If capturing wb point get it here
-        if self._wbCapture:
-            # Cut out a 10x10 pixel area to sample white balance from
-            sample = image[self._wbPoint[1] - 5:self._wbPoint[1] + 5,
-                     self._wbPoint[0] - 5:self._wbPoint[0] + 5, :]
-
-            # average over it and set it as the white point in both the menu and main screen
-            self._whitePoint = np.mean(sample, axis=(0, 1))
-            self.manager.get_screen('main').setWhitePoint(self._whitePoint)
-
-            # Tell it to capturing white point
-            self._wbCapture = False
-
-        image = cv2.resize(image, (720, 576))
-
-        # Process the image according to user inputs
-        image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
-        # image = App.get_running_app().imgProcessor.getImage()
-        # texture = App.get_running_app().imgProcessor.getTexture()
-
-        self.ids.background.texture = texture
-        self.ids.hist.texture = self.genHist(image, 720, 576)
+            # average it and set wb
+            wbPixel = np.mean(sample, axis=(0, 1))
+            App.get_running_app().stream.setWBPixel(wbPixel)
 
     def genHist(self, image, hist_w, hist_h):
         # Initial variables
@@ -213,16 +139,12 @@ class CamApp(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.stream = DummyVid().start()
-        self.imgProcessor = None
 
     def build(self):
-        # self.stream = DummyVid().start()
-        # self.imgProcessor = ImageProcessor().start(self.stream)
         pass
 
     def stop(self):
         self.stream.stop()
-        # self.imgProcessor.stop()
 
     def captureImage(self):
         self.root.get_screen('main').stop()

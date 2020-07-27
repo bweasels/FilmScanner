@@ -53,10 +53,6 @@ class MainScreen(Screen):
         super().__init__(**kwargs)
         self.framerate = 20
         self._clock = None
-        self._invert = False
-
-        self._wb = None
-        self._whitePoint = (255, 255, 255)
 
         self.start()
 
@@ -66,27 +62,17 @@ class MainScreen(Screen):
     def stop(self):
         Clock.unschedule(self._clock)
 
-    def invert(self):
-        self._invert = not self._invert
-
-    def activateWB(self):
-        if self._wb is not None:
-            self._wb = None
-        else:
-            self._wb = self._whitePoint
-
-    def setWhitePoint(self, value):
-        self._whitePoint = value
-
     def animate(self, dt):
-        image = App.get_running_app().stream.getFrame()
+        # image = App.get_running_app().stream.getFrame()
         # cv2.imshow('raw image', image)
         # cv2.waitKey(0)
         # image = np.zeros((640, 800, 3), np.uint8)
         # image = image + 25
 
         # Set the texture and update the fps counter
-        image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
+        # image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
+
+        image, texture = App.get_running_app().stream.processImage()
         self.ids.background.texture = texture
         self.ids.fps.text = str(round(1 / dt, 1))
 
@@ -98,65 +84,54 @@ class MenuScreen(Screen):
         self._framerate = 20
         self._invert = False
 
-        # A variety of properties for white balance control
-        self._wb = None
-        self._whitePoint = (255, 255, 255)
-        self._wbCapture = False
-        self._wbPoint = (0, 0)
-
     def start(self):
         self._clock = Clock.schedule_interval(self.animate, 1.0 / self._framerate)
 
     def stop(self):
         Clock.unschedule(self._clock)
 
-    def invert(self):
-        self._invert = not self._invert
-
-    def activateWB(self):
-        if self._wb is not None:
-            self._wb = None
-        else:
-            self._wb = self._whitePoint
-
-    def setWhitePoint(self, value):
-        self._whitePoint = value
-
-    def getWhitePoint(self):
-        return self._whitePoint
-
     def on_touch_up(self, touch):
-        # On touch if within the image, gather the 5x5 grid of pixels and get average bgr for wb
+        # On touch if within the image, gather the 10x10 grid of pixels and get average bgr for wb
         if (touch.pos[0] < 700.0) & (touch.pos[1] > 110.0):
             # Get the ratio between the onscreen image and actual image
             xRatio = 800.0 / 700.0
             yRatio = 640.0 / 540.0
 
             # Use the ratio and offsets to get the full image size
-            self._wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
-            self._wbCapture = True
+            wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
+
+            # get a full sized screengrab and sample the 10x10 area
+            image = App.get_running_app().stream.getFrame()
+            sample = image[wbPoint[1]-5: wbPoint[1]+5,
+                     wbPoint[0]-5: wbPoint[0]+5, :]
+
+            # average it and set wb
+            wbPixel = np.mean(sample, axis=(0, 1))
+            App.get_running_app().stream.setWBPixel(wbPixel)
 
     def animate(self, dt):
         # Make a dummy image for me
-        image = App.get_running_app().stream.getFrame()
+        # image = App.get_running_app().stream.getFrame()
 
         # If capturing wb point get it here
-        if self._wbCapture:
-            # Cut out a 10x10 pixel area to sample white balance from
-            sample = image[self._wbPoint[1] - 5:self._wbPoint[1] + 5,
-                     self._wbPoint[0] - 5:self._wbPoint[0] + 5, :]
+        # if self._wbCapture:
+        #     # Cut out a 10x10 pixel area to sample white balance from
+        #     sample = image[self._wbPoint[1] - 5:self._wbPoint[1] + 5,
+        #              self._wbPoint[0] - 5:self._wbPoint[0] + 5, :]
+        #
+        #     # average over it and set it as the white point in both the menu and main screen
+        #     self._whitePoint = np.mean(sample, axis=(0, 1))
+        #     self.manager.get_screen('main').setWhitePoint(self._whitePoint)
+        #
+        #     # Tell it to capturing white point
+        #     self._wbCapture = False
+        #
+        # image = cv2.resize(image, (720, 576))
+        #
+        # # Process the image according to user inputs
+        # image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
+        image, texture = App.get_running_app().stream.processImage()
 
-            # average over it and set it as the white point in both the menu and main screen
-            self._whitePoint = np.mean(sample, axis=(0, 1))
-            self.manager.get_screen('main').setWhitePoint(self._whitePoint)
-
-            # Tell it to capturing white point
-            self._wbCapture = False
-
-        image = cv2.resize(image, (720, 576))
-
-        # Process the image according to user inputs
-        image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
         self.ids.background.texture = texture
         self.ids.hist.texture = self.genHist(image, 720, 576)
 

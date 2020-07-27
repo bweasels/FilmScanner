@@ -83,8 +83,7 @@ WindowManager:
             halign: 'center'
             valign: 'middle'
             on_release:
-                root.invert()
-                root.manager.get_screen('main').invert()
+                app.stream.invert()
 
         Button:
             id: wbactivate
@@ -96,8 +95,7 @@ WindowManager:
             halign: 'center'
             valign: 'middle'
             on_release:
-                root.activateWB()
-                root.manager.get_screen('main').activateWB()
+                app.stream.activateWB()
 
         Slider:
             id: exposureSlider
