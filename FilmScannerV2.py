@@ -15,38 +15,11 @@ from gpiozero import CPUTemperature
 import cv2
 import numpy as np
 
-# Import raspicam classes from files
+# Import homebrew classes from the file
 from raspiCam import RaspiVid, RaspiCam
 
 Config.set('graphics', 'width', '800')
 Config.set('graphics', 'height', '640')
-
-
-def processImage(image, invert, WBPoint=None):
-    # For some reason, openCV's images are flipped for Kivy
-    image = cv2.flip(image, 0)
-
-    if WBPoint is not None:
-        b, g, r = cv2.split(image)
-
-        lum = (WBPoint[0] + WBPoint[1] + WBPoint[2]) / 3
-
-        b = (lum / WBPoint[0]) * b
-        g = (lum / WBPoint[1]) * g
-        r = (lum / WBPoint[2]) * r
-
-        image = np.uint8(cv2.merge((b, g, r)))
-
-    # If invert button is pressed, flip that puppy
-    if invert:
-        image = cv2.bitwise_not(image)
-
-    # This is all code to convert it to a bitstream for Kivy
-    buffer = image.tostring()
-    texture = Texture.create(size=(image.shape[1], image.shape[0]), colorfmt='bgr')
-    texture.blit_buffer(buffer, colorfmt='bgr', bufferfmt='ubyte')
-    return image, texture
-
 
 class MainScreen(Screen):
     def __init__(self, **kwargs):
@@ -63,17 +36,11 @@ class MainScreen(Screen):
         Clock.unschedule(self._clock)
 
     def animate(self, dt):
-        # image = App.get_running_app().stream.getFrame()
-        # cv2.imshow('raw image', image)
-        # cv2.waitKey(0)
-        # image = np.zeros((640, 800, 3), np.uint8)
-        # image = image + 25
-
-        # Set the texture and update the fps counter
-        # image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
-
+        # Get image and apply it to background
         image, texture = App.get_running_app().stream.processImage()
         self.ids.background.texture = texture
+
+        # add fps counter
         self.ids.fps.text = str(round(1 / dt, 1))
 
 
@@ -91,13 +58,13 @@ class MenuScreen(Screen):
         Clock.unschedule(self._clock)
 
     def on_touch_up(self, touch):
-        # On touch if within the image, gather the 10x10 grid of pixels and get average bgr for wb
+        # If within the bounds of the image, get white point averaged over a 10x10 area and save it
         if (touch.pos[0] < 700.0) & (touch.pos[1] > 110.0):
             # Get the ratio between the onscreen image and actual image
             xRatio = 800.0 / 700.0
             yRatio = 640.0 / 540.0
 
-            # Use the ratio and offsets to get the full image size
+            # Use the ratio and offsets to get the full sized image location
             wbPoint = (round(touch.pos[0] * xRatio), round((touch.pos[1] - 110) * yRatio))
 
             # get a full sized screengrab and sample the 10x10 area
@@ -110,26 +77,7 @@ class MenuScreen(Screen):
             App.get_running_app().stream.setWBPixel(wbPixel)
 
     def animate(self, dt):
-        # Make a dummy image for me
-        # image = App.get_running_app().stream.getFrame()
-
-        # If capturing wb point get it here
-        # if self._wbCapture:
-        #     # Cut out a 10x10 pixel area to sample white balance from
-        #     sample = image[self._wbPoint[1] - 5:self._wbPoint[1] + 5,
-        #              self._wbPoint[0] - 5:self._wbPoint[0] + 5, :]
-        #
-        #     # average over it and set it as the white point in both the menu and main screen
-        #     self._whitePoint = np.mean(sample, axis=(0, 1))
-        #     self.manager.get_screen('main').setWhitePoint(self._whitePoint)
-        #
-        #     # Tell it to capturing white point
-        #     self._wbCapture = False
-        #
-        # image = cv2.resize(image, (720, 576))
-        #
-        # # Process the image according to user inputs
-        # image, texture = processImage(image=image, invert=self._invert, WBPoint=self._wb)
+        # Get processed image and apply it
         image, texture = App.get_running_app().stream.processImage()
 
         self.ids.background.texture = texture
@@ -214,7 +162,7 @@ class CamApp(App):
         self.camera.shutterSpeed = shutterSpeed
         self.camera.exposureComp = ev
         print('applied exposure settings')
-        self.camera.capture('fname.dng')
+        self.camera.capture(fname='fname.dng')
         print('captured photo')
         # restart the stream and the main screen
         self.stream.start()
