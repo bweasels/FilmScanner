@@ -14,7 +14,7 @@ from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 # raspberry pi imports
-from gpiozero import CPUTemperature
+# from gpiozero import CPUTemperature
 import RPi.GPIO as GPIO
 
 # Image processing imports
@@ -135,14 +135,16 @@ class CamApp(App):
         pass
 
     def monitorTemp(self, dt):
+        # Get temperature from pi system files
         tFile = open('/sys/class/thermal/thermal_zone0/temp')
         temp = float(tFile.read())
-        tempC = temp / 1000
-        print(tempC)
-        cpu = CPUTemperature()
+        temp = temp / 1000
+
+        # Temperature range
         roomTemp = 25
         maxTemp = 85
-        self.fan.start(100 * (cpu.temperature - roomTemp) / (maxTemp - roomTemp))
+
+        self.fan.start(100 * (temp - roomTemp) / (maxTemp - roomTemp))
 
     def stop(self):
         self.stream.stop()
