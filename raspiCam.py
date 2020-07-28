@@ -165,7 +165,7 @@ class RaspiCam:
 
 #    def capture(self, fname):
     def capture(self, shutterSpeed, exposureComp):
-        subprocess.call('raspistill', '-o image.jpg')
+        subprocess.call('raspistill -o image.jpg')
         # Initalize Camera and set camera settings
         # with PiCamera(sensor_mode=3) as camera:
             # camera.exposure_compensation = 0
