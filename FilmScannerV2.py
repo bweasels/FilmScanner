@@ -155,13 +155,13 @@ class CamApp(App):
         self.stream.stop()
 
         # Start the "still camera" and apply the settings
-        # self.camera = RaspiCam()
+        self.camera = RaspiCam()
         print('stopped stream and started camera')
-        # self.camera.shutterSpeed = shutterSpeed
-        # self.camera.exposureComp = ev
+        self.camera.shutterSpeed = shutterSpeed
+        self.camera.exposureComp = ev
         print('applied exposure settings')
-        # self.camera.stopCamera()
-        # cv2.waitKey(10)
+        self.camera.stopCamera()
+        cv2.waitKey(10)
         # self.camera.capture(fname='fname.dng')
         # print('captured photo')
         # restart the stream and the main screen
