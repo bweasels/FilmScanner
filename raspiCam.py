@@ -45,7 +45,8 @@ class RaspiVid:
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
         print("RaspiVid: Capturing Continuous Frames")
         # Start the thread to pull frames from the video stream
-        Thread(target=self._update, args=()).start()
+        # Thread(target=self._update, args=()).start()
+        self._update()
         return self
 
     def stop(self):
