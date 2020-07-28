@@ -120,7 +120,7 @@ class CamApp(App):
 
         # start the camera stream
         self.stream = RaspiVid().start()
-
+        self.camera = RaspiCam()
         # Set up the pwm pin managing the fan
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(12, GPIO.OUT)
@@ -153,16 +153,16 @@ class CamApp(App):
         ev = self.stream.exposure_comp
         print('got existing shutter values')
         self.stream.stop()
-        cv2.waitKey(10)
+        # cv2.waitKey(10)
 
         # Start the "still camera" and apply the settings
-        self.camera = RaspiCam()
+        self.camera.capture()
         print('stopped stream and started camera')
         self.camera.shutterSpeed = shutterSpeed
         self.camera.exposureComp = ev
         print('applied exposure settings')
         self.camera.stopCamera()
-        cv2.waitKey(10)
+        # cv2.waitKey(10)
         # self.camera.capture(fname='fname.dng')
         # print('captured photo')
         # restart the stream and the main screen

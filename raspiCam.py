@@ -151,18 +151,21 @@ class RaspiCam:
         self.res = (800, 480)
         self.previewExposure = False
 
+        self.camera = None
+        # set up variables for this
+        self.frame = None
+        self.stopped = False
+
+#    def capture(self, fname):
+    def capture(self):
         self.camera = PiCamera(sensor_mode=3)
         self.camera.start_preview()
         self.camera.awb_mode = 'off'
         self.camera.iso = 100
 
-        # set up variables for this
-        self.frame = None
-        self.stopped = False
-
-    def capture(self, fname):
         # Start the thread to pull frames from the video stream
-        Thread(target=self._capture, args=fname).start()
+        # Thread(target=self._capture, args=fname).start()
+        Thread(target=self._capture, args = ()).start()
         return self
 
     def _capture(self, fname):
