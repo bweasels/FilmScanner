@@ -159,6 +159,7 @@ class CamApp(App):
         # self.camera.capture(fname='fname.dng')
         # print('captured photo')
         # restart the stream and the main screen
+        cv2.waitKey(10)
         self.stream.start()
         self.root.get_screen('main').start()
         print('restarted stream')
