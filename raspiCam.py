@@ -169,10 +169,10 @@ class RaspiCam:
         self.camera.awb_mode = 'off'
         self.camera.iso = 100
         print('RaspiCam: Set Camera settings')
-
+        self._capture()
         # Start the thread to pull frames from the video stream
         # Thread(target=self._capture, args=fname).start()
-        Thread(target=self._capture, args=()).start()
+        # Thread(target=self._capture, args=()).start()
         return self
 
 #     def _capture(self, fname):
