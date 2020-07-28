@@ -161,7 +161,7 @@ class CamApp(App):
         self.camera.exposureComp = ev
         print('applied exposure settings')
         self.camera.stopCamera()
-        cv2.waitKey(0.5)
+        cv2.waitKey(10)
         # self.camera.capture(fname='fname.dng')
         # print('captured photo')
         # restart the stream and the main screen
