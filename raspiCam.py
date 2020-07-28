@@ -176,6 +176,9 @@ class RaspiCam:
         stream.close()
         self.camera.close()
 
+    def stopCamera(self):
+        self.camera.close()
+
     @property
     def shutterSpeed(self):
         return self.camera.shutter_speed
