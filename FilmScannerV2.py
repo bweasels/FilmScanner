@@ -154,16 +154,16 @@ class CamApp(App):
         self.stream.stop()
 
         # Captured image
-        # self.camera.capture(shutterSpeed=ss, exposureComp=ev)
-        # print('Captured Full DNG')
+        self.camera.capture(shutterSpeed=ss, exposureComp=ev)
+        print('Captured Full DNG')
         # cv2.waitKey(10)
         # self.camera.capture(fname='fname.dng')
         # print('captured photo')
         # restart the stream and the main screen
         cv2.waitKey(10)
         self.stream.start()
+        self.stream.shutterSpeed
         self.root.get_screen('main').start()
-        print('restarted stream')
 
 
 if __name__ == '__main__':
