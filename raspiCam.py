@@ -38,6 +38,8 @@ class RaspiVid:
         self._wbPixel = (255, 255, 255)
 
     def start(self):
+        # Reset stopped to fix it
+        self.stopped = False
         self.camera = PiCamera(resolution=self.res)
         print("\n")
         self.camera._check_camera_open()

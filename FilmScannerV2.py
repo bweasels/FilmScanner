@@ -168,7 +168,7 @@ class CamApp(App):
         # restart the stream and the main screen
         cv2.waitKey(10)
         self.stream.start()
-        self.stream.shutterSpeed
+        print(self.stream.shutterSpeed)
         self.root.get_screen('main').start()
 
 
