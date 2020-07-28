@@ -148,17 +148,17 @@ class CamApp(App):
         # Stop the menu, get the current settings from the stream, and stop the stream
         print('started capturing image')
         self.root.get_screen('main').stop()
-        shutterSpeed = self.stream.shutterSpeed
+        ss = self.stream.shutterSpeed
         ev = self.stream.exposure_comp
         self.stream.stop()
         # cv2.waitKey(10)
 
         # apply the settings
-        self.camera.shutterSpeed = shutterSpeed
-        self.camera.exposureComp = ev
+        # self.camera.shutterSpeed = shutterSpeed
+        # self.camera.exposureComp = ev
 
         # Captured image
-        self.camera.capture()
+        self.camera.capture(shutterSpeed=ss, exposureComp=ev)
         print('Captured Full DNG')
         # cv2.waitKey(10)
         # self.camera.capture(fname='fname.dng')

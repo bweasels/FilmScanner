@@ -160,9 +160,12 @@ class RaspiCam:
         self.stopped = False
 
 #    def capture(self, fname):
-    def capture(self):
-        # Initalized Camera
+    def capture(self, shutterSpeed, exposureComp):
+        # Initalize Camera and set camera settings
         self.camera = PiCamera(sensor_mode=3)
+        self.camera.exposure_compensation = exposureComp
+        self.camera.shutter_speed = shutterSpeed
+
         self.camera.start_preview()
         self.camera.awb_mode = 'off'
         self.camera.iso = 100
