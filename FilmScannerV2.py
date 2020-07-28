@@ -151,11 +151,6 @@ class CamApp(App):
         ss = self.stream.shutterSpeed
         ev = self.stream.exposure_comp
         self.stream.stop()
-        # cv2.waitKey(10)
-
-        # apply the settings
-        # self.camera.shutterSpeed = shutterSpeed
-        # self.camera.exposureComp = ev
 
         # Captured image
         self.camera.capture(shutterSpeed=ss, exposureComp=ev)
@@ -164,7 +159,6 @@ class CamApp(App):
         # self.camera.capture(fname='fname.dng')
         # print('captured photo')
         # restart the stream and the main screen
-        print('restarted stream')
         self.stream.start()
         self.root.get_screen('main').start()
         print('restarted stream')

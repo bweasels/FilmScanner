@@ -54,6 +54,7 @@ class RaspiVid:
 
     def _update(self):
         # keep looping and keep the stream open
+        print("Successfully started update")
         for f in self.stream:
             self.frame = f.array
             self.output.truncate(0)
@@ -63,6 +64,9 @@ class RaspiVid:
                 self.stream.close()
                 self.output.close()
                 self.camera.close()
+                self.camera = None
+                self.stream = None
+                self.output = None
                 return
 
     def getFrame(self):
