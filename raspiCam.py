@@ -161,39 +161,25 @@ class RaspiCam:
 
 #    def capture(self, fname):
     def capture(self):
+        # Initalized Camera
         self.camera = PiCamera(sensor_mode=3)
-        print('\n')
-        print('RaspiCam: Started Camera on Sensor Mode 3')
         self.camera.start_preview()
-        print('RaspiCam: Started Preview')
         self.camera.awb_mode = 'off'
         self.camera.iso = 100
-        print('RaspiCam: Set Camera settings')
-        self._capture()
-        # Start the thread to pull frames from the video stream
-        # Thread(target=self._capture, args=fname).start()
-        # Thread(target=self._capture, args=()).start()
-        return self
 
-#     def _capture(self, fname):
-    def _capture(self):
+        # Started Stream and captured raw bayer data
         stream = BytesIO()
         self.camera.capture(stream, 'jpeg', bayer=True)
-        print('RaspiCam: Captured bayer data to stream')
+
+        # Created DNG Converter and saved file
         d = RPICAM2DNG()
         output = d.convert(stream)
         with open('file.dng', 'wb') as f:
             f.write(output)
-        print("RaspiCam: Wrote out File")
+
+        # Closed out Camera
         self.camera.stop_preview()
-
-        print("RaspiCam: Stopped Preview")
-
         stream.close()
-        self.camera.close()
-        print("RaspiCam: Closed Stream and Camera")
-
-    def stopCamera(self):
         self.camera.close()
 
     @property
