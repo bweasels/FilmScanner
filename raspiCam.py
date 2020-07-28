@@ -39,8 +39,11 @@ class RaspiVid:
 
     def start(self):
         self.camera = PiCamera(resolution=self.res)
+        print("\n")
+        print("RaspiVid: Instantiated new Camera")
         self.output = PiRGBArray(self.camera, size=self.res)
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
+        print("RaspiVid: Capturing Continuous Frames")
         # Start the thread to pull frames from the video stream
         Thread(target=self._update, args=()).start()
         return self
@@ -159,9 +162,13 @@ class RaspiCam:
 #    def capture(self, fname):
     def capture(self):
         self.camera = PiCamera(sensor_mode=3)
+        print('\n')
+        print('RaspiCam: Started Camera on Sensor Mode 3')
         self.camera.start_preview()
+        print('RaspiCam: Started Preview')
         self.camera.awb_mode = 'off'
         self.camera.iso = 100
+        print('RaspiCam: Set Camera settings')
 
         # Start the thread to pull frames from the video stream
         # Thread(target=self._capture, args=fname).start()
@@ -172,14 +179,19 @@ class RaspiCam:
     def _capture(self):
         stream = BytesIO()
         self.camera.capture(stream, 'jpeg', bayer=True)
+        print('RaspiCam: Captured bayer data to stream')
         d = RPICAM2DNG()
         output = d.convert(stream)
         with open('file.dng', 'wb') as f:
             f.write(output)
+        print("RaspiCam: Wrote out File")
         self.camera.stop_preview()
+
+        print("RaspiCam: Stopped Preview")
 
         stream.close()
         self.camera.close()
+        print("RaspiCam: Closed Stream and Camera")
 
     def stopCamera(self):
         self.camera.close()
