@@ -1,5 +1,6 @@
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
 
 
@@ -25,3 +26,12 @@ class BaseScreen(Screen):
 
 
 ##ADD CODE TO CUSTOMIZE BUTTON AND SLIDER COLORS##
+class SlowButton(Button):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+
+    def _disable(self):
+        self.disabled = True
+
+    def _enable(self):
+        self.disabled = False

@@ -28,7 +28,7 @@ WindowManager:
             size_hint: (0.1, 0.1)
             pos: (0, 432)
 
-        Button:
+        SlowButton:
             id: capture
             text: "capture"
             font_size: 40
@@ -42,8 +42,10 @@ WindowManager:
                     width: 2
                     rectangle: self.x, self.y, self.width, self.height
             on_release:
+                self._disable()
                 print("Yay!")
                 app.captureImage()
+                self._enable()
 
 <MenuScreen>:
     name: 'menu'
