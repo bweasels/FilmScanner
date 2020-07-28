@@ -169,7 +169,7 @@ class RaspiCam:
 
             # camera.start_preview()
             camera.awb_mode = 'off'
-            camera.iso = 100
+            # camera.iso = 100
 
             # Started Stream and captured raw bayer data
             stream = BytesIO()
