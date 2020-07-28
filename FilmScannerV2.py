@@ -153,6 +153,7 @@ class CamApp(App):
         ev = self.stream.exposure_comp
         print('got existing shutter values')
         self.stream.stop()
+        cv2.waitKey(10)
 
         # Start the "still camera" and apply the settings
         self.camera = RaspiCam()
