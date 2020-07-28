@@ -10,6 +10,7 @@ from picamera import PiCamera
 from threading import Thread
 from io import BytesIO
 import numpy as np
+import subprocess
 import time
 
 # OpenCV
@@ -164,26 +165,27 @@ class RaspiCam:
 
 #    def capture(self, fname):
     def capture(self, shutterSpeed, exposureComp):
+        subprocess.call('raspistill', '-o image.jpg')
         # Initalize Camera and set camera settings
-        with PiCamera(sensor_mode=3) as camera:
-            camera.exposure_compensation = 0
-            camera.shutter_speed = 0
+        # with PiCamera(sensor_mode=3) as camera:
+            # camera.exposure_compensation = 0
+            # camera.shutter_speed = 0
 
-            camera.start_preview()
-            cv2.waitKey(10000)
-            camera.awb_mode = 'off'
+            # camera.start_preview()
+            # cv2.waitKey(10000)
+            # camera.awb_mode = 'off'
             # camera.iso = 100
 
             # Started Stream and captured raw bayer data
-            stream = BytesIO()
-            camera.capture(stream, 'jpeg', bayer=True)
+            # stream = BytesIO()
+            # camera.capture(stream, 'jpeg', bayer=True)
 
             # Created DNG Converter and saved file
-            d = RPICAM2DNG()
-            output = d.convert(stream)
-            with open('file.dng', 'wb') as f:
-                f.write(output)
-            stream.close()
+            # d = RPICAM2DNG()
+            # output = d.convert(stream)
+            # with open('file.dng', 'wb') as f:
+            #     f.write(output)
+            # stream.close()
 
 
     @property
