@@ -1,25 +1,28 @@
 # Kivy core mechanism imports
-from kivy.app import App
-from kivy.clock import Clock
-from kivy.config import Config
 from kivy.core.window import Window
+from kivy.config import Config
+from kivy.clock import Clock
+from kivy.app import App
 
 # Kivy pre-made object imports
-from kivy.uix.image import Image
+from kivy.graphics.texture import Texture
 from kivy.uix.button import Button
 from kivy.uix.slider import Slider
-from kivy.graphics.texture import Texture
+from kivy.uix.image import Image
 
 # Screen manager
 from kivy.uix.screenmanager import ScreenManager, Screen
 
-# raspberry pi imports
-# from gpiozero import CPUTemperature
+# raspberry pi system control
 import RPi.GPIO as GPIO
+import os
 
 # Image processing imports
-import cv2
+from pydng.core import RPICAM2DNG
+from datetime import datetime
 import numpy as np
+import cv2
+
 
 # Import homebrew classes from the file
 from raspiCam import RaspiVid, RaspiCam
@@ -159,12 +162,20 @@ class CamApp(App):
         self.stream.stop()
 
         # Capture image
-        self.camera.capture(shutterSpeed=ss, exposureComp=ev)
+        fname = ("ugh")
+        print(ss)
+        print(ev)
+        self.camera.capture(shutterSpeed=ss, exposureComp=ev, filename=fname)
 
         # Restart stream
         self.stream.start()
         self.root.get_screen('main').start()
 
+    def convertImages(self):
+        time = datetime.now()
+        folder = "/media/pi/*/"+time("%m-%d-%Y_%H%M%S")
+        os.mkdir(folder)
+        files = os.listdir('tmp')
 
 if __name__ == '__main__':
     CamApp().run()

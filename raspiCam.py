@@ -3,7 +3,7 @@ from kivy.graphics.texture import Texture
 
 # Raspicam and DNG Converter imports
 from picamera.array import PiRGBArray
-from pydng.core import RPICAM2DNG
+
 from picamera import PiCamera
 
 # Basic Python IO Imports
@@ -164,30 +164,9 @@ class RaspiCam:
         self.stopped = False
 
 #    def capture(self, fname):
-    def capture(self, shutterSpeed, exposureComp):
+    def capture(self, shutterSpeed, exposureComp, filename):
         cmd = 'raspistill -o /home/pi/Documents/FilmScanner/image.jpg'
         subprocess.call(cmd, shell=True)
-        # Initalize Camera and set camera settings
-        # with PiCamera(sensor_mode=3) as camera:
-            # camera.exposure_compensation = 0
-            # camera.shutter_speed = 0
-
-            # camera.start_preview()
-            # cv2.waitKey(10000)
-            # camera.awb_mode = 'off'
-            # camera.iso = 100
-
-            # Started Stream and captured raw bayer data
-            # stream = BytesIO()
-            # camera.capture(stream, 'jpeg', bayer=True)
-
-            # Created DNG Converter and saved file
-            # d = RPICAM2DNG()
-            # output = d.convert(stream)
-            # with open('file.dng', 'wb') as f:
-            #     f.write(output)
-            # stream.close()
-
 
     @property
     def shutterSpeed(self):
