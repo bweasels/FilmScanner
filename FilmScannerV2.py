@@ -123,7 +123,7 @@ class CamApp(App):
 
         # Set up the pwm pin managing the fan
         GPIO.setmode(GPIO.BOARD)
-        GPIO.setup(12, GPIO.OUT, initial=40)
+        GPIO.setup(12, GPIO.OUT)
         self.fan = GPIO.PWM(12, 25000)
 
         # schedule temp monitor to only fire every second
@@ -160,11 +160,12 @@ class CamApp(App):
         self.camera.shutterSpeed = shutterSpeed
         self.camera.exposureComp = ev
         print('applied exposure settings')
-        self.camera.capture(fname='fname.dng')
-        print('captured photo')
+        # self.camera.capture(fname='fname.dng')
+        # print('captured photo')
         # restart the stream and the main screen
         self.stream.start()
         self.root.get_screen('main').start()
+        print('restarted stream')
 
 
 if __name__ == '__main__':
