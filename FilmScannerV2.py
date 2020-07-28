@@ -135,6 +135,10 @@ class CamApp(App):
         pass
 
     def monitorTemp(self, dt):
+        tFile = open('/sys/class/thermal/thermal_zone0/temp')
+        temp = float(tFile.read())
+        tempC = temp / 1000
+        print(tempC)
         cpu = CPUTemperature()
         roomTemp = 25
         maxTemp = 85
