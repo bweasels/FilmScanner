@@ -61,12 +61,12 @@ class RaspiVid:
 
             # if told to stop close out camera
             if self.stopped:
-                self.stream.close()
-                self.output.close()
+                # self.stream.close()
+                # self.output.close()
                 self.camera.close()
                 self.camera = None
-                self.stream = None
-                self.output = None
+                # self.stream = None
+                # self.output = None
                 return
 
     def getFrame(self):
