@@ -45,8 +45,7 @@ class RaspiVid:
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
         print("RaspiVid: Capturing Continuous Frames")
         # Start the thread to pull frames from the video stream
-        # Thread(target=self._update, args=()).start()
-        self._update()
+        Thread(target=self._update, args=()).start()
         return self
 
     def stop(self):
@@ -167,28 +166,29 @@ class RaspiCam:
 #    def capture(self, fname):
     def capture(self, shutterSpeed, exposureComp):
         # Initalize Camera and set camera settings
-        self.camera = PiCamera(sensor_mode=3)
-        self.camera.exposure_compensation = exposureComp
-        self.camera.shutter_speed = shutterSpeed
+        with PiCamera(sensor_mode=3) as camera:
+            # self.camera = PiCamera(sensor_mode=3)
+            camera.exposure_compensation = exposureComp
+            camera.shutter_speed = shutterSpeed
 
-        self.camera.start_preview()
-        self.camera.awb_mode = 'off'
-        self.camera.iso = 100
+            camera.start_preview()
+            camera.awb_mode = 'off'
+            camera.iso = 100
 
-        # Started Stream and captured raw bayer data
-        stream = BytesIO()
-        self.camera.capture(stream, 'jpeg', bayer=True)
+            # Started Stream and captured raw bayer data
+            stream = BytesIO()
+            camera.capture(stream, 'jpeg', bayer=True)
 
-        # Created DNG Converter and saved file
-        d = RPICAM2DNG()
-        output = d.convert(stream)
-        with open('file.dng', 'wb') as f:
-            f.write(output)
+            # Created DNG Converter and saved file
+            d = RPICAM2DNG()
+            output = d.convert(stream)
+            with open('file.dng', 'wb') as f:
+                f.write(output)
 
         # Closed out Camera
-        self.camera.stop_preview()
+        # self.camera.stop_preview()
         stream.close()
-        self.camera.close()
+        # self.camera.close()
 
     @property
     def shutterSpeed(self):
