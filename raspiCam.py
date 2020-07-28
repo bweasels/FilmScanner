@@ -165,10 +165,11 @@ class RaspiCam:
 
         # Start the thread to pull frames from the video stream
         # Thread(target=self._capture, args=fname).start()
-        Thread(target=self._capture, args = ()).start()
+        Thread(target=self._capture, args=()).start()
         return self
 
-    def _capture(self, fname):
+#     def _capture(self, fname):
+    def _capture(self):
         stream = BytesIO()
         time.sleep(0.1)
         self.camera.capture(stream, 'jpeg', bayer=True)
