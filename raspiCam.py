@@ -171,13 +171,11 @@ class RaspiCam:
 #     def _capture(self, fname):
     def _capture(self):
         stream = BytesIO()
-        time.sleep(0.1)
         self.camera.capture(stream, 'jpeg', bayer=True)
         d = RPICAM2DNG()
         output = d.convert(stream)
         with open('file.dng', 'wb') as f:
             f.write(output)
-        time.sleep(10)
         self.camera.stop_preview()
 
         stream.close()
