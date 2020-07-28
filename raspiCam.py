@@ -40,6 +40,7 @@ class RaspiVid:
     def start(self):
         self.camera = PiCamera(resolution=self.res)
         print("\n")
+        self.camera._check_camera_open()
         print("RaspiVid: Instantiated new Camera")
         self.output = PiRGBArray(self.camera, size=self.res)
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
@@ -180,9 +181,8 @@ class RaspiCam:
             output = d.convert(stream)
             with open('file.dng', 'wb') as f:
                 f.write(output)
+            stream.close()
 
-        # Closed out Camera
-        stream.close()
 
     @property
     def shutterSpeed(self):
