@@ -3,6 +3,8 @@ from kivy.clock import Clock
 from kivy.uix.button import Button
 from kivy.uix.screenmanager import ScreenManager, Screen
 
+import time
+
 
 class BaseScreen(Screen):
     def __init__(self, **kwargs):
@@ -34,4 +36,5 @@ class SlowButton(Button):
         self.disabled = True
 
     def _enable(self):
+        time.sleep(0.5)
         self.disabled = False
