@@ -122,6 +122,7 @@ class CamApp(App):
         self.stream = RaspiVid().start()
         self.camera = RaspiCam()
         # Set up the pwm pin managing the fan
+        GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD)
         GPIO.setup(12, GPIO.OUT)
         self.fan = GPIO.PWM(12, 25000)
@@ -153,8 +154,8 @@ class CamApp(App):
         self.stream.stop()
 
         # Captured image
-        self.camera.capture(shutterSpeed=ss, exposureComp=ev)
-        print('Captured Full DNG')
+        # self.camera.capture(shutterSpeed=ss, exposureComp=ev)
+        # print('Captured Full DNG')
         # cv2.waitKey(10)
         # self.camera.capture(fname='fname.dng')
         # print('captured photo')

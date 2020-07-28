@@ -186,9 +186,7 @@ class RaspiCam:
                 f.write(output)
 
         # Closed out Camera
-        # self.camera.stop_preview()
         stream.close()
-        # self.camera.close()
 
     @property
     def shutterSpeed(self):
