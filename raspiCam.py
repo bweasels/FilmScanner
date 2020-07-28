@@ -24,9 +24,9 @@ class RaspiVid:
         self.previewExposure = False
 
         # variables to hold the various pieces of the stream
-        self.camera = PiCamera(resolution=self.res)
-        self.output = PiRGBArray(self.camera, size=self.res)
-        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
+        self.camera = None # PiCamera(resolution=self.res)
+        self.output = None # PiRGBArray(self.camera, size=self.res)
+        self.stream = None # self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
 
         # Internal data variables
         self.frame = None
@@ -38,6 +38,9 @@ class RaspiVid:
         self._wbPixel = (255, 255, 255)
 
     def start(self):
+        self.camera = PiCamera(resolution=self.res)
+        self.output = PiRGBArray(self.camera, size=self.res)
+        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
         # Start the thread to pull frames from the video stream
         Thread(target=self._update, args=()).start()
         return self
