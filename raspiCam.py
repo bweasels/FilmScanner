@@ -38,15 +38,14 @@ class RaspiVid:
         self._wbPixel = (255, 255, 255)
 
     def start(self):
-        # Reset stopped to fix it
+        # Set stopped to false to keep _update looping
         self.stopped = False
+
+        # Initalize camera output and stream
         self.camera = PiCamera(resolution=self.res)
-        print("\n")
-        self.camera._check_camera_open()
-        print("RaspiVid: Instantiated new Camera")
         self.output = PiRGBArray(self.camera, size=self.res)
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
-        print("RaspiVid: Capturing Continuous Frames")
+
         # Start the thread to pull frames from the video stream
         Thread(target=self._update, args=()).start()
         return self
@@ -167,10 +166,11 @@ class RaspiCam:
     def capture(self, shutterSpeed, exposureComp):
         # Initalize Camera and set camera settings
         with PiCamera(sensor_mode=3) as camera:
-            camera.exposure_compensation = exposureComp
-            camera.shutter_speed = shutterSpeed
+            camera.exposure_compensation = 0
+            camera.shutter_speed = 0
 
-            # camera.start_preview()
+            camera.start_preview()
+            cv2.waitKey(10000)
             camera.awb_mode = 'off'
             # camera.iso = 100
 
