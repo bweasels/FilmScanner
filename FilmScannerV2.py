@@ -169,9 +169,6 @@ class CamApp(App):
         self.stream.stop()
 
         # Capture image
-        fname = ("ugh")
-        print(ss)
-        print(ev)
         self.camera.capture(shutterSpeed=ss, exposureComp=ev, filename=fname)
 
         # Restart stream
