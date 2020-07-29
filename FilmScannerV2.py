@@ -132,7 +132,7 @@ class CamApp(App):
 
         # schedule temp monitor to only fire every second
         self.tempMonitor = Clock.schedule_interval(self.monitorTemp, 1.0)
-        self.stream.settings(shutterSpeed=, iso=100, awbMode='sunlight')
+        self.stream.settings(shutterSpeed=190, iso=100, awbMode='sunlight')
 
     def build(self):
         pass
