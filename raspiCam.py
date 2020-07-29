@@ -108,7 +108,7 @@ class RaspiVid:
 
     @property
     def iso(self):
-        return self.camera.analog_gain, self.camera.digital_gain
+        return self.camera.iso
 
     @iso.setter
     def iso(self, value):
@@ -116,7 +116,7 @@ class RaspiVid:
 
     @property
     def shutterSpeed(self):
-        return self.camera.exposure_speed
+        return self.camera.shutter_speed
 
     @shutterSpeed.setter
     def shutterSpeed(self, value):
