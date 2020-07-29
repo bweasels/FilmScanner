@@ -166,7 +166,7 @@ class CamApp(App):
         self.root.get_screen('main').stop()
         ss = self.stream.shutterSpeed
         ev = self.stream.exposure_comp
-        print(self.stream.getSettings())
+        # print(self.stream.getSettings())
         print("iso:" + str(self.stream.iso) + " shutter setting: ", str(self.stream.shutterSpeed))
         # Pi camera uses a scale of +24 to -24 while raspistill uses +10 to -10, so convert
         ev = (ev/24)*10
