@@ -119,7 +119,7 @@ class RaspiVid:
 
     @property
     def shutterSpeed(self):
-        return self.camera.shutter_speed
+        return self.camera.exposure_speed
 
     @shutterSpeed.setter
     def shutterSpeed(self, value):
