@@ -144,10 +144,17 @@ class CamApp(App):
         temp = temp / 1000
 
         # Temperature range
-        roomTemp = 25
-        maxTemp = 85
+        nominalTemp = 45
+        maxTemp = 80
 
-        self.fan.start(100 * (temp - roomTemp) / (maxTemp - roomTemp))
+        if temp < nominalTemp:
+            fanSpeed = 10
+        elif nominalTemp < temp < maxTemp:
+            fanSpeed = 100*(temp-nominalTemp)/(maxTemp-nominalTemp)
+        elif temp >= maxTemp:
+            fanSpeed = 100
+
+        self.fan.start(fanSpeed)
 
     def stop(self):
         self.stream.stop()
