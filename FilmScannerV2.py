@@ -171,6 +171,7 @@ class CamApp(App):
         ev = (ev/24)*10
         self.stream.stop()
 
+        fname = "Ugh"
         # Capture image
         self.camera.capture(shutterSpeed=ss, exposureComp=ev, filename=fname)
 
