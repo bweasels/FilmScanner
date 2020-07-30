@@ -168,7 +168,7 @@ class RaspiCam:
 
 #    def capture(self, fname):
     def capture(self, shutterSpeed, exposureComp, filename):
-        cmd = 'raspistill -ex sports -ISO 100 -v -awb off -t 100 -ss ' + str(shutterSpeed) + \
+        cmd = 'raspistill -ex sports -ISO 100 -v -awb off -t 1000 -ss ' + str(shutterSpeed) + \
               ' -ev ' + str(exposureComp) + ' -o /home/pi/Documents/FilmScanner/image.jpg'
         print(cmd)
         subprocess.call(cmd, shell=True)
