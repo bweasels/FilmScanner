@@ -45,7 +45,7 @@ class RaspiVid:
         # Initalize camera output and stream
         self.camera = PiCamera(resolution=self.res)
         self.camera.exposure_mode = 'off'
-        self.camera.awb_mode = 'off'
+        self.camera.awb_mode = 'sunlight'
         self.camera.iso = 100
         self.output = PiRGBArray(self.camera, size=self.res)
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
@@ -168,7 +168,7 @@ class RaspiCam:
 
 #    def capture(self, fname):
     def capture(self, shutterSpeed, exposureComp, filename):
-        cmd = 'raspistill -ISO 100 -v -t 2000 -ss ' + str(shutterSpeed) + \
+        cmd = 'raspistill -awb off -ISO 100 -v -ex off -t 2000 -ss ' + str(shutterSpeed) + \
               ' -ev ' + str(round(exposureComp)) + ' -o /home/pi/Documents/FilmScanner/image.jpg'
         print(cmd)
         subprocess.call(cmd, shell=True)
