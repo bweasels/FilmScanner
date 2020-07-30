@@ -172,6 +172,7 @@ class RaspiCam:
               ' -ev ' + str(round(exposureComp)) + ' -o /home/pi/Documents/FilmScanner/image.jpg'
         print(cmd)
         subprocess.call(cmd, shell=True)
+        time.sleep(0.5)
 
     @property
     def shutterSpeed(self):
