@@ -174,7 +174,7 @@ class RaspiCam:
 #              ' -ev ' + str(round(exposureComp)) + ' -t 5000 -o /home/pi/Documents/FilmScanner/image.jpg'
         # cmd = 'raspistill -md 3 -ISO 100 -set -ex sun -ag 1' + ' -ev ' + str(round(exposureComp)) + \
         #       ' -t 5000 -o /home/pi/Documents/FilmScanner/image.jpg'
-        cmd = 'raspistill -md 3 -ISO 100 -ex off -ag 1 -dg 1 -ev -24 -set -v -ss ' + str(shutterSpeed) + ' -o imageTest.jpg'
+        cmd = 'raspistill -md 3 -ISO 100 -ag 1 -dg 1 -ev -24 -set -v -ss ' + str(shutterSpeed) + ' -o imageTest.jpg'
         # cmd = 'raspiyuv -rgb '
         print(cmd)
         subprocess.call(cmd, shell=True)
