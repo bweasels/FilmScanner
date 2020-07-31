@@ -171,7 +171,7 @@ class RaspiCam:
     def capture(self, shutterSpeed, exposureComp, filename):
         cv2.waitKey(500)
         cmd = 'raspistill -ISO 100 -ss ' + str(shutterSpeed) + ' -set -ex off -ag 1' + \
-              ' -ev ' + str(round(exposureComp)) + ' -t 5000 -o /home/pi/Documents/FilmScanner/image.jpg'
+              ' -ev ' + str(round(exposureComp)) + ' -t 5000 --nopreview -o /home/pi/Documents/FilmScanner/image.jpg'
         print(cmd)
         subprocess.call(cmd, shell=True)
 
