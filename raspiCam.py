@@ -44,7 +44,7 @@ class RaspiVid:
         # Initalize camera output and stream
         self.camera = PiCamera(resolution=self.res)
         self.camera.iso = 100
-        cv2.waitKey(500)
+        cv2.waitKey(2000)
         self.camera.exposure_mode = 'off'
         g = self.camera.awb_gains
         self.camera.awb_mode = 'off'
@@ -172,7 +172,7 @@ class RaspiCam:
 #    def capture(self, fname):
     def capture(self, shutterSpeed, exposureComp, filename):
         cv2.waitKey(500)
-        cmd = 'raspistill -awb off -ISO 100 -v -ex off -t 5000 -ss ' + str(shutterSpeed) + \
+        cmd = 'raspistill -awb off -ISO 100 -v -ex off -st -t 5000 -ss ' + str(shutterSpeed) + \
               ' -ev ' + str(round(exposureComp)) + ' -o /home/pi/Documents/FilmScanner/image.jpg'
         print(cmd)
         subprocess.call(cmd, shell=True)
