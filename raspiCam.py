@@ -44,11 +44,7 @@ class RaspiVid:
         # Initalize camera output and stream
         self.camera = PiCamera(resolution=self.res)
         self.camera.iso = 100
-        cv2.waitKey(2000)
         self.camera.exposure_mode = 'off'
-        g = self.camera.awb_gains
-        self.camera.awb_mode = 'off'
-        self.camera.awb_gains = g
 
         self.output = PiRGBArray(self.camera, size=self.res)
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
