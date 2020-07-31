@@ -11,7 +11,6 @@ from threading import Thread
 from io import BytesIO
 import numpy as np
 import subprocess
-import time
 
 # OpenCV
 import cv2
@@ -44,6 +43,7 @@ class RaspiVid:
 
         # Initalize camera output and stream
         self.camera = PiCamera(resolution=self.res)
+        cv2.waitKey(500)
         self.camera.exposure_mode = 'off'
         self.camera.awb_mode = 'sunlight'
         self.camera.iso = 100
@@ -168,11 +168,11 @@ class RaspiCam:
 
 #    def capture(self, fname):
     def capture(self, shutterSpeed, exposureComp, filename):
-        cmd = 'raspistill -awb off -ISO 100 -v -ex off -t 2000 -ss ' + str(shutterSpeed) + \
+        cmd = 'raspistill -awb off -ISO 100 -v -ex off -t 5000 -ss ' + str(shutterSpeed) + \
               ' -ev ' + str(round(exposureComp)) + ' -o /home/pi/Documents/FilmScanner/image.jpg'
         print(cmd)
         subprocess.call(cmd, shell=True)
-        time.sleep(0.5)
+        cv2.waitKey(500)
 
     @property
     def shutterSpeed(self):
