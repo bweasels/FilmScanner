@@ -47,6 +47,7 @@ class MenuScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self._wbPoint = (0, 0)
+        self._startup = False
 
     def animate(self, dt):
         image, texture = App.get_running_app().stream.processImage()
@@ -195,6 +196,7 @@ class CamApp(App):
         for f in files:
             converter.convert(image='./tmp/'+f)
         cmd = 'mv ' + tempFolder + '*.dng ' + folder
+        print(cmd)
         subprocess.call(cmd, shell=True)
         # cmd = 'rm ' + tempFolder + "*.jpg"
 
