@@ -16,8 +16,8 @@ from kivy.config import Config
 from threading import Thread
 
 # Image processing imports
-from datetime import datetime
 import numpy as np
+import time
 import cv2
 import os
 
@@ -136,11 +136,10 @@ class CamApp(App):
         self.root.get_screen('main').start()
 
     def convertImages(self):
-        time = datetime.now()
-        folder = './testUSB/' + time("%m-%d-%Y_%H%M%S")
+        currentTime = time.strftime("%Y-%m-%d_%H%M%S")
+        folder = "./testUSB/"+currentTime
         os.mkdir(folder)
         files = os.listdir('./tmp/')
-        print(files)
 
 if __name__ == '__main__':
     CamApp().run()

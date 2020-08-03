@@ -182,8 +182,8 @@ class CamApp(App):
         self.root.get_screen('main').start()
 
     def convertImages(self):
-        time = datetime.now()
-        folder = "/media/pi/*/" + time("%m-%d-%Y_%H%M%S")
+        currentTime = time.strftime("%Y-%m-%d_%H%M%S")
+        folder = "/media/pi/*/" + currentTime
         os.mkdir(folder)
         files = os.listdir('./tmp/')
         print(files)
