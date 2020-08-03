@@ -168,14 +168,10 @@ class RaspiCam:
         self.stopped = False
 
 #    def capture(self, fname):
-    def capture(self, shutterSpeed, exposureComp, filename):
+    def capture(self, shutterSpeed, exposureComp, photoNo):
         cv2.waitKey(500)
-#        cmd = 'raspistill -md 3 -ISO 100 -ss ' + str(shutterSpeed) + ' -set -ex off -ag 1' + \
-#              ' -ev ' + str(round(exposureComp)) + ' -t 5000 -o /home/pi/Documents/FilmScanner/image.jpg'
-        # cmd = 'raspistill -md 3 -ISO 100 -set -ex sun -ag 1' + ' -ev ' + str(round(exposureComp)) + \
-        #       ' -t 5000 -o /home/pi/Documents/FilmScanner/image.jpg'
-        cmd = 'raspistill -md 3 -ex snow -mm backlit -awb off -ag 1 -dg 1 -awbg 3.625,1.402 -t 500 -set -v -ss ' + str(shutterSpeed) + ' -o imageTest.jpg'
-        # cmd = 'raspiyuv -rgb '
+        cmd = 'raspistill -md 3 -ex snow -mm backlit -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
+              '-t 500 -ev ' + str(exposureComp) + '-ss ' + str(shutterSpeed) + ' -o ./tmp/scan' + str(photoNo) + '.jpg'
         print(cmd)
         subprocess.call(cmd, shell=True)
 

@@ -134,6 +134,9 @@ class CamApp(App):
         self.tempMonitor = Clock.schedule_interval(self.monitorTemp, 1.0)
         self.stream.settings(shutterSpeed=190, iso=100, awbMode='sunlight')
 
+        # create scan counter
+        self.scanCounter = 1
+
     def build(self):
         pass
 
@@ -166,15 +169,13 @@ class CamApp(App):
         self.root.get_screen('main').stop()
         ss = self.stream.shutterSpeed
         ev = self.stream.exposure_comp
-        # print(self.stream.getSettings())
-        print("iso:" + str(self.stream.iso) + " shutter setting: ", str(self.stream.shutterSpeed))
         # Pi camera uses a scale of +24 to -24 while raspistill uses +10 to -10, so convert
         ev = (ev/24)*10
         self.stream.stop()
 
-        fname = "Ugh"
-        # Capture image
-        self.camera.capture(shutterSpeed=ss, exposureComp=ev, filename=fname)
+        # Capture image and increment the scan counter
+        self.camera.capture(shutterSpeed=ss, exposureComp=ev, photoNo = self.scanCounter)
+        self.scanCounter += 1
 
         # Restart stream
         self.stream.start()
@@ -182,9 +183,10 @@ class CamApp(App):
 
     def convertImages(self):
         time = datetime.now()
-        folder = "/media/pi/*/"+time("%m-%d-%Y_%H%M%S")
+        folder = "/media/pi/*/" + time("%m-%d-%Y_%H%M%S")
         os.mkdir(folder)
-        files = os.listdir('tmp')
+        files = os.listdir('./tmp/')
+        print(files)
 
 if __name__ == '__main__':
     CamApp().run()

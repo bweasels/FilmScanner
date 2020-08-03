@@ -16,9 +16,10 @@ from kivy.config import Config
 from threading import Thread
 
 # Image processing imports
-import cv2
+from datetime import datetime
 import numpy as np
-import time
+import cv2
+import os
 
 # Class imports
 from dummyCam import DummyVid
@@ -129,16 +130,17 @@ class CamApp(App):
         shutterSpeed = self.stream.shutterSpeed
         ev = self.stream.exposure_comp
         print('shutter speed: ' + str(shutterSpeed) + " | Exposure Comp: ", str(ev))
-        # Start the camera and apply the settings
-        # self.camera = RaspiCam()
-        # self.camera.shutterSpeed = shutterSpeed
-        # self.camera.exposureComp = ev
-        # self.camera.capture('fname.dng')
 
         # restart the stream and the main screen
         self.stream.start()
         self.root.get_screen('main').start()
 
+    def convertImages(self):
+        time = datetime.now()
+        folder = './testUSB/' + time("%m-%d-%Y_%H%M%S")
+        os.mkdir(folder)
+        files = os.listdir('./tmp/')
+        print(files)
 
 if __name__ == '__main__':
     CamApp().run()
