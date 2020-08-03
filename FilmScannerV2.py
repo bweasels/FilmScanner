@@ -20,6 +20,7 @@ import os
 # Image processing imports
 from pydng.core import RPICAM2DNG
 import numpy as np
+import subprocess
 import time
 import cv2
 
@@ -192,12 +193,9 @@ class CamApp(App):
         files = os.listdir(tempFolder)
         converter = RPICAM2DNG()
         for f in files:
-            print(f)
             converter.convert(image='./tmp/'+f)
-        print(os.listdir(tempFolder))
-        cmd = 'mv ' + tempFolder + '* ' + folder
-        print(cmd)
-        # subprocess.call(cmd, shell=True)
+        cmd = 'mv ' + tempFolder + '*.dng ' + folder
+        subprocess.call(cmd, shell=True)
 
 
 if __name__ == '__main__':
