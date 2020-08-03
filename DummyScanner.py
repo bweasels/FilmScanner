@@ -1,19 +1,13 @@
 # Kivy graphics imports
 from kivy.app import App
-from kivy.uix.image import Image
-from kivy.clock import Clock
-from kivy.uix.button import Button
-from kivy.uix.togglebutton import ToggleButton
-from kivy.uix.slider import Slider
 from kivy.core.window import Window
 from kivy.graphics.texture import Texture
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.screenmanager import ScreenManager
 from kivy.config import Config
 
 # piCamera imports
 # from picamera.array import PiRGBArray
 # from picamera import PiCamera
-from threading import Thread
 
 # Image processing imports
 import numpy as np
@@ -22,9 +16,9 @@ import cv2
 import os
 
 # Class imports
-from dummyCam import DummyVid
-from CustomGUIClasses import BaseScreen
-from GenericBars import GenericBar
+from Classes.dummyCam import DummyVid
+from Classes.CustomGUIClasses import BaseScreen
+from Classes.GenericBars import GenericBar
 
 Config.set('graphics', 'resizable', 0)
 Window.size = (800, 480)
@@ -130,7 +124,7 @@ class WindowManager(ScreenManager):
     pass
 
 
-class CamApp(App):
+class FilmScanner(App):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.stream = DummyVid().start()
@@ -159,6 +153,6 @@ class CamApp(App):
         files = os.listdir('./tmp/')
 
 if __name__ == '__main__':
-    CamApp().run()
-    CamApp().stop()
+    FilmScanner().run()
+    FilmScanner().stop()
     quit()

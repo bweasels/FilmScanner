@@ -84,10 +84,13 @@ class RaspiVid:
             b, g, r = cv2.split(image)
 
             lum = (self._wbPixel[0] + self._wbPixel[1] + self._wbPixel[2]) / 3
+            b_lum = lum/self._wbPixel[0]
+            g_lum = lum/self._wbPixel[1]
+            r_lum = lum/self._wbPixel[2]
 
-            b = (lum / self._wbPixel[0]) * b
-            g = (lum / self._wbPixel[1]) * g
-            r = (lum / self._wbPixel[2]) * r
+            b = b_lum * b
+            g = g_lum * g
+            r = r_lum * r
 
             image = np.uint8(cv2.merge((b, g, r)))
 
