@@ -174,7 +174,7 @@ class CamApp(App):
         self.stream.stop()
 
         # Capture image and increment the scan counter
-        self.camera.capture(shutterSpeed=ss, exposureComp=ev, photoNo = self.scanCounter)
+        self.camera.capture(shutterSpeed=ss, exposureComp=ev, photoNo=self.scanCounter)
         self.scanCounter += 1
 
         # Restart stream
@@ -183,7 +183,7 @@ class CamApp(App):
 
     def convertImages(self):
         currentTime = time.strftime("%Y-%m-%d_%H%M%S")
-        folder = "/media/pi/*/" + currentTime
+        folder = os.path.join('/media/pi', os.listdir('/media/pi')[0], currentTime)
         os.mkdir(folder)
         files = os.listdir('./tmp/')
         print(files)
