@@ -153,20 +153,10 @@ class CamApp(App):
         self.root.get_screen('main').start()
 
     def convertImages(self):
-        mainScreen = self.root.get_screen('main')
-        mainScreen.addProgressBar(5)
-
         currentTime = time.strftime("%Y-%m-%d_%H%M%S")
         folder = "./testUSB/" + currentTime
         os.mkdir(folder)
         files = os.listdir('./tmp/')
-
-        for i in range(len(files)):
-            mainScreen.incrementProgressBar()
-            print(i)
-            time.sleep(1)
-
-        mainScreen.removeProgressBar()
 
 if __name__ == '__main__':
     CamApp().run()
