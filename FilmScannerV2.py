@@ -182,11 +182,21 @@ class CamApp(App):
         self.root.get_screen('main').start()
 
     def convertImages(self):
+        # make a new folder with the date time
         currentTime = time.strftime("%Y-%m-%d_%H%M%S")
         folder = os.path.join('/media/pi', os.listdir('/media/pi')[0], currentTime)
         os.mkdir(folder)
-        files = os.listdir('./tmp/')
-        print(files)
+
+        # Get the temp folders and use PyDNG to convert
+        tempFolder = '/home/pi/Documents/FilmScanner/tmp/'
+        files = os.listdir(tempFolder)
+        for f in files:
+            RPICAM2DNG.convert(f, compress = False)
+        print(os.listdir(tempFolder))
+        cmd = 'mv ' + tempFolder + '* ' + folder
+        print(cmd)
+        # subprocess.call(cmd, shell=True)
+
 
 if __name__ == '__main__':
     CamApp().run()

@@ -58,7 +58,7 @@ class MenuScreen(BaseScreen):
             yRatio = 640.0 / 384.0
 
             # Use the ratio and offsets to get the full image size
-            wbPoint = (round((touch.pos[0]-64) * xRatio), round((touch.pos[1] - 96) * yRatio))
+            wbPoint = (round((touch.pos[0] - 64) * xRatio), round((touch.pos[1] - 96) * yRatio))
 
             # Get a full sized screen grab and sample the 10x10 area
             image = App.get_running_app().stream.getFrame()
@@ -137,9 +137,10 @@ class CamApp(App):
 
     def convertImages(self):
         currentTime = time.strftime("%Y-%m-%d_%H%M%S")
-        folder = "./testUSB/"+currentTime
+        folder = "./testUSB/" + currentTime
         os.mkdir(folder)
         files = os.listdir('./tmp/')
+
 
 if __name__ == '__main__':
     CamApp().run()
