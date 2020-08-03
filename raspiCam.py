@@ -173,7 +173,7 @@ class RaspiCam:
         filename = './tmp/scan' + str(photoNo) + '.jpg'
         print(filename)
         cmd = 'raspistill -md 3 -ex snow -mm backlit -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
-              '-t 500 -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -o ' + filename
+              '-t 500 -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filename
         print(cmd)
         subprocess.call(cmd, shell=True)
 
