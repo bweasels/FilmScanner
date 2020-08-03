@@ -184,21 +184,30 @@ class CamApp(App):
         self.root.get_screen('main').start()
 
     def convertImages(self):
-        # make a new folder with the date time
+        # make sure that there is a USB Drive inserted
         currentTime = time.strftime("%Y-%m-%d_%H%M%S")
+        if len(os.listdir('/media/pi'))==0:
+            print('Please insert a USB Drive')
+            return
+
+        # create a dated output folder
         folder = os.path.join('/media/pi', os.listdir('/media/pi')[0], currentTime)
         os.mkdir(folder)
 
-        # Get the temp folders and use PyDNG to convert
+        # Get the images in the tmp folder and use PyDNG to convert
         tempFolder = '/home/pi/Documents/FilmScanner/tmp/'
         files = os.listdir(tempFolder)
         converter = RPICAM2DNG()
         for f in files:
             converter.convert(image='./tmp/'+f)
+
+        # Move the dngs to the removable drive
         cmd = 'mv ' + tempFolder + '*.dng ' + folder
-        print(cmd)
         subprocess.call(cmd, shell=True)
-        # cmd = 'rm ' + tempFolder + "*.jpg"
+
+        # Remove the files in the tmp folder
+        cmd = 'rm ' + tempFolder + "*.jpg"
+        subprocess.call(cmd, shell=True)
 
 
 if __name__ == '__main__':

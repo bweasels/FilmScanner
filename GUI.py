@@ -24,6 +24,7 @@ import os
 # Class imports
 from dummyCam import DummyVid
 from CustomGUIClasses import BaseScreen
+from GenericBars import GenericBar
 
 Config.set('graphics', 'resizable', 0)
 Window.size = (800, 480)
@@ -35,7 +36,23 @@ class MainScreen(BaseScreen):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         self.start()
+        self.progressBar = None
 
+    def addProgressBar(self, length):
+        self.progressBar = GenericBar()
+
+        self.progressBar.min = 0.0
+        self.progressBar.max = float(length)
+        self.progressBar.position = 400, 0
+        self.progressBar.value = 0.0
+
+        self.ids.layout.add_widget(self.progressBar)
+
+    def incrementProgressBar(self):
+        self.progressBar.value += 1
+
+    def removeProgressBar(self):
+        self.ids.layout.remove_widget(self.progressBar)
 
 class MenuScreen(BaseScreen):
     def __init__(self, **kwargs):
@@ -136,11 +153,20 @@ class CamApp(App):
         self.root.get_screen('main').start()
 
     def convertImages(self):
+        mainScreen = self.root.get_screen('main')
+        mainScreen.addProgressBar(5)
+
         currentTime = time.strftime("%Y-%m-%d_%H%M%S")
         folder = "./testUSB/" + currentTime
         os.mkdir(folder)
         files = os.listdir('./tmp/')
 
+        for i in range(len(files)):
+            mainScreen.incrementProgressBar()
+            print(i)
+            time.sleep(1)
+
+        mainScreen.removeProgressBar()
 
 if __name__ == '__main__':
     CamApp().run()
