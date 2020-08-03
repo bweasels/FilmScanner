@@ -35,7 +35,7 @@ class RaspiVid:
         # variables for image post processing
         self._invert = False
         self._wb = False
-        self._wbPixel = (255, 255, 255)
+        self._balance = (1, 1, 1)
 
     def start(self):
         # Set stopped to false to keep _update looping
@@ -83,14 +83,14 @@ class RaspiVid:
         if self._wb:
             b, g, r = cv2.split(image)
 
-            lum = (self._wbPixel[0] + self._wbPixel[1] + self._wbPixel[2]) / 3
-            b_lum = lum/self._wbPixel[0]
-            g_lum = lum/self._wbPixel[1]
-            r_lum = lum/self._wbPixel[2]
+            #lum = (self._wbPixel[0] + self._wbPixel[1] + self._wbPixel[2]) / 3
+            #b_lum = lum/self._wbPixel[0]
+            #g_lum = lum/self._wbPixel[1]
+            #r_lum = lum/self._wbPixel[2]
 
-            b = b_lum * b
-            g = g_lum * g
-            r = r_lum * r
+            b = self._balance[0] * b
+            g = self._balance[1] * g
+            r = self._balance[2] * r
 
             image = np.uint8(cv2.merge((b, g, r)))
 
@@ -111,7 +111,8 @@ class RaspiVid:
         self._wb = not self._wb
 
     def setWBPixel(self, value):
-        self._wbPixel = value
+        lum = (value[0] + value[1] + value[2]) / 3
+        self._balance = (lum / value[0], lum / value[1], lum / value[2])
 
     @property
     def iso(self):

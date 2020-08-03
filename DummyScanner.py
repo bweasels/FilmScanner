@@ -18,7 +18,6 @@ import os
 # Class imports
 from Classes.dummyCam import DummyVid
 from Classes.CustomGUIClasses import BaseScreen
-from Classes.GenericBars import GenericBar
 
 Config.set('graphics', 'resizable', 0)
 Window.size = (800, 480)
