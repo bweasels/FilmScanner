@@ -19,8 +19,8 @@ import os
 
 # Image processing imports
 from pydng.core import RPICAM2DNG
-from datetime import datetime
 import numpy as np
+import time
 import cv2
 
 
