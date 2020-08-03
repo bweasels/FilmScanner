@@ -192,6 +192,7 @@ class CamApp(App):
         files = os.listdir(tempFolder)
         converter = RPICAM2DNG()
         for f in files:
+            print(f)
             converter.convert(image=f)
         print(os.listdir(tempFolder))
         cmd = 'mv ' + tempFolder + '* ' + folder
