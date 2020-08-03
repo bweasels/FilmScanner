@@ -191,7 +191,7 @@ class CamApp(App):
         tempFolder = '/home/pi/Documents/FilmScanner/tmp/'
         files = os.listdir(tempFolder)
         for f in files:
-            RPICAM2DNG.convert(f)
+            RPICAM2DNG.convert(image=f)
         print(os.listdir(tempFolder))
         cmd = 'mv ' + tempFolder + '* ' + folder
         print(cmd)
