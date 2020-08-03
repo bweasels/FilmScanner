@@ -196,6 +196,7 @@ class CamApp(App):
             converter.convert(image='./tmp/'+f)
         cmd = 'mv ' + tempFolder + '*.dng ' + folder
         subprocess.call(cmd, shell=True)
+        # cmd = 'rm ' + tempFolder + "*.jpg"
 
 
 if __name__ == '__main__':
