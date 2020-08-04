@@ -21,3 +21,5 @@
  performance (Currently the white balance calculations slow everything down to ~7-9fps from 20fps)
 - I've also included a set of dummy scripts to debug the UI when not on the Raspberry pi! These should have the same
 class calls as the proper py versions, but will only output a blue frames.
+- The guide to construct the film scanner and parts list ~~is here~~ _will be uploaded when I finally get around to making
+a portfolio website._

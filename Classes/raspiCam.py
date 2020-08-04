@@ -1,14 +1,12 @@
 # Kivy import
 from kivy.graphics.texture import Texture
 
-# Raspicam and DNG Converter imports
+# Raspicam imports
 from picamera.array import PiRGBArray
-
 from picamera import PiCamera
 
 # Basic Python IO Imports
 from threading import Thread
-from io import BytesIO
 import numpy as np
 import subprocess
 
@@ -35,7 +33,7 @@ class RaspiVid:
         # variables for image post processing
         self._invert = False
         self._wb = False
-        self._balance = (1, 1, 1)
+        self._wbPixel = (255, 255, 255)
 
     def start(self):
         # Set stopped to false to keep _update looping
@@ -83,10 +81,10 @@ class RaspiVid:
         if self._wb:
             b, g, r = cv2.split(image)
 
-            #lum = (self._wbPixel[0] + self._wbPixel[1] + self._wbPixel[2]) / 3
-            #b_lum = lum/self._wbPixel[0]
-            #g_lum = lum/self._wbPixel[1]
-            #r_lum = lum/self._wbPixel[2]
+            lum = (self._wbPixel[0] + self._wbPixel[1] + self._wbPixel[2]) / 3
+            b_lum = lum/self._wbPixel[0]
+            g_lum = lum/self._wbPixel[1]
+            r_lum = lum/self._wbPixel[2]
 
             b = self._balance[0] * b
             g = self._balance[1] * g
@@ -111,8 +109,7 @@ class RaspiVid:
         self._wb = not self._wb
 
     def setWBPixel(self, value):
-        lum = (value[0] + value[1] + value[2]) / 3
-        self._balance = (lum / value[0], lum / value[1], lum / value[2])
+        self._wbPixel = value
 
     @property
     def iso(self):

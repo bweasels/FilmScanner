@@ -2,6 +2,7 @@
 import numpy as np
 import cv2
 
+
 # F1, F2, F3 are testing various array splitting and combining methods
 def f1(image, pixel):
     b = image[:, :, 0]
@@ -43,6 +44,7 @@ def f3(image, pixel):
     image = np.dstack((b, g, r))
     return image
 
+
 # F4 and F5 test if pre calculating lum/pixel is faster or slower based on the result that f2 is fastest
 def f4(image, pixel):
     b, g, r = cv2.split(image)
@@ -56,7 +58,9 @@ def f4(image, pixel):
     image = cv2.merge((b, g, r))
     return image
 
-def f5(image, pixel):
+pixel = (75, 75, 75)
+
+def f5(image):
     b, g, r = cv2.split(image)
 
     lum = (pixel[0] + pixel[1] + pixel[2]) / 3
@@ -64,6 +68,36 @@ def f5(image, pixel):
     b = (lum / pixel[0]) * b
     g = (lum / pixel[1]) * g
     r = (lum / pixel[2]) * r
+
+    image = cv2.merge((b, g, r))
+    return image
+
+
+global_pixel = (0.5, 0.5, 0.5)
+
+
+def f6(image):
+    b, g, r = cv2.split(image)
+
+    b = global_pixel[0] * b
+    g = global_pixel[1] * g
+    r = global_pixel[2] * r
+
+    image = cv2.merge((b, g, r))
+    return image
+
+
+global_r = 0.5
+global_b = 0.5
+global_g = 0.5
+
+
+def f7(image):
+    b, g, r = cv2.split(image)
+
+    b = global_b * b
+    g = global_g * g
+    r = global_r * r
 
     image = cv2.merge((b, g, r))
     return image
@@ -87,13 +121,13 @@ import time
 import random
 import statistics
 
-functions = f4, f5
+functions = f5, f6, f7
 times = {f.__name__: [] for f in functions}
 
 for i in range(10000):  # adjust accordingly so whole thing takes a few sec
     func = random.choice(functions)
     t0 = time.time()
-    func(img, wbPixel)
+    func(img)
     t1 = time.time()
     times[func.__name__].append((t1 - t0) * 1000)
 
