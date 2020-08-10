@@ -1,5 +1,6 @@
 # Kivy graphics imports
 from kivy.app import App
+from kivy.clock import Clock
 from kivy.core.window import Window
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager
@@ -10,6 +11,7 @@ from kivy.config import Config
 # from picamera import PiCamera
 
 # Image processing imports
+from threading import Thread
 import numpy as np
 import time
 import cv2
@@ -17,7 +19,7 @@ import os
 
 # Class imports
 from Classes.dummyCam import DummyVid
-from Classes.CustomGUIClasses import BaseScreen
+from Classes.CustomGUIClasses import BaseScreen, GenericBar
 
 Config.set('graphics', 'resizable', 0)
 Window.size = (800, 480)
@@ -30,22 +32,8 @@ class MainScreen(BaseScreen):
         super().__init__(**kwargs)
         self.start()
         self.progressBar = None
+        self.triggerConvert = False
 
-    def addProgressBar(self, length):
-        self.progressBar = GenericBar()
-
-        self.progressBar.min = 0.0
-        self.progressBar.max = float(length)
-        self.progressBar.position = 400, 0
-        self.progressBar.value = 0.0
-
-        self.ids.layout.add_widget(self.progressBar)
-
-    def incrementProgressBar(self):
-        self.progressBar.value += 1
-
-    def removeProgressBar(self):
-        self.ids.layout.remove_widget(self.progressBar)
 
 class MenuScreen(BaseScreen):
     def __init__(self, **kwargs):
@@ -150,6 +138,11 @@ class FilmScanner(App):
         folder = "./testUSB/" + currentTime
         os.mkdir(folder)
         files = os.listdir('./tmp/')
+
+        for i in range(len(files)):
+            print('file: ' + str(i))
+            time.sleep(1)
+
 
 if __name__ == '__main__':
     FilmScanner().run()

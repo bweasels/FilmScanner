@@ -53,8 +53,8 @@ from kivy.uix.widget import Widget
 _DEFAULT_TEXT_LABEL = Label(text="{}", font_size=32, halign='middle', valign='middle')
 _DEFAULT_NAME = Label(text="{}", font_size=50)
 _DEFAULT_PLOT_SIZE = (10, 100)
-_DEFAULT_MAX_PROGRESS = 15.0
-_DEFAULT_MIN_PROGRESS = -15.0
+_DEFAULT_MAX_PROGRESS = 10.0
+_DEFAULT_MIN_PROGRESS = 0
 _DEFAULT_POS = 100, 100
 _DEFAULT_BORDER_THICKNESS = 0
 _DEFAULT_BORDER_HEIGHT = 250
@@ -198,7 +198,7 @@ class GenericBar(Widget):
         quanta = range / (self._max_progress - self._min_progress)
         return int(quanta * value)
 
-    def _draw(self):
+    def _draw(self, *args):
         """
         Function used to draw the progress bar onto the screen.
         The drawing process is as follows:
@@ -210,7 +210,6 @@ class GenericBar(Widget):
         with self.canvas:
             self.canvas.clear()
             self._refresh_text()
-            print('built!')
 
             # Draw the background progress line
             Color(1, 1, 1, 1)

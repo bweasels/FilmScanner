@@ -18,7 +18,7 @@ class RaspiVid:
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
         # Set up the camera
-        self.res = (800, 480)
+        self.res = (640, 480)
         self.previewExposure = False
 
         # variables to hold the various pieces of the stream
@@ -33,7 +33,8 @@ class RaspiVid:
         # variables for image post processing
         self._invert = False
         self._wb = False
-        self._wbPixel = (255, 255, 255)
+        #self._wbPixel = (255, 255, 255)
+        self._balance = (0, 0, 0)
 
     def start(self):
         # Set stopped to false to keep _update looping
@@ -47,7 +48,7 @@ class RaspiVid:
         # self.camera.exposure_mode = 'off'
 
         self.output = PiRGBArray(self.camera, size=self.res)
-        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
+        self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(640, 480))
 
         # Start the thread to pull frames from the video stream
         Thread(target=self._update, args=()).start()
@@ -81,11 +82,6 @@ class RaspiVid:
         if self._wb:
             b, g, r = cv2.split(image)
 
-            lum = (self._wbPixel[0] + self._wbPixel[1] + self._wbPixel[2]) / 3
-            b_lum = lum/self._wbPixel[0]
-            g_lum = lum/self._wbPixel[1]
-            r_lum = lum/self._wbPixel[2]
-
             b = self._balance[0] * b
             g = self._balance[1] * g
             r = self._balance[2] * r
@@ -109,7 +105,11 @@ class RaspiVid:
         self._wb = not self._wb
 
     def setWBPixel(self, value):
-        self._wbPixel = value
+        lum = (value[0] + value[1] + value[2]) / 3
+        b_lum = lum / value[0]
+        g_lum = lum / value[1]
+        r_lum = lum / value[2]
+        self._balance = (b_lum, g_lum, r_lum)
 
     @property
     def iso(self):
