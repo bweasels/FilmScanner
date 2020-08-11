@@ -1,6 +1,7 @@
 # **Software For The Pi Film Scanner**
 
-##Required external Packages and software versions
+## Required external Packages and software versions
+
 **Python 3.7.3**
 1) Kivy v1.11.1
 2) RPi.GPIO
@@ -11,12 +12,12 @@
 
 
 
-##Installation
+## Installation
 1) Copy these files over
 2) Python FilmScanner.py
 3) Enjoy!
 
-#Notes!
+# Notes!
 - I've included several benchmarking scripts under TestScripts/ to help test different algorithms to improve white balance
  performance (Currently the white balance calculations slow everything down to ~7-9fps from 20fps)
 - I've also included a set of dummy scripts to debug the UI when not on the Raspberry pi! These should have the same
