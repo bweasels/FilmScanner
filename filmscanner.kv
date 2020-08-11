@@ -56,7 +56,8 @@ WindowManager:
             background_color: (0.5, 0.5, 0.5, 0.25)
             on_release:
                 self._disable()
-                app.convertImages()
+                app.triggerConvert()
+                #app.convertImages()
                 self._enable()
 
 <MenuScreen>:

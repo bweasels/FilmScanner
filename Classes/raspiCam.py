@@ -22,9 +22,9 @@ class RaspiVid:
         self.previewExposure = False
 
         # variables to hold the various pieces of the stream
-        self.camera = None # PiCamera(resolution=self.res)
-        self.output = None # PiRGBArray(self.camera, size=self.res)
-        self.stream = None # self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(800, 480))
+        self.camera = None
+        self.output = None
+        self.stream = None
 
         # Internal data variables
         self.frame = None
@@ -33,7 +33,6 @@ class RaspiVid:
         # variables for image post processing
         self._invert = False
         self._wb = False
-        #self._wbPixel = (255, 255, 255)
         self._balance = (0, 0, 0)
 
     def start(self):

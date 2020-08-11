@@ -16,15 +16,15 @@ import os
 
 # Image processing imports
 from pydng.core import RPICAM2DNG
+from threading import Thread
 import numpy as np
 import subprocess
 import time
 import cv2
 
-
 # Import homebrew classes from the file
 from Classes.raspiCam import RaspiVid, RaspiCam
-from Classes.CustomGUIClasses import BaseScreen
+from Classes.CustomGUIClasses import BaseScreen, ProgressBar
 
 # Graphical properties
 Window.fullscreen = True
@@ -123,6 +123,7 @@ class FilmScanner(App):
         # start the camera stream
         self.stream = RaspiVid().start()
         self.camera = RaspiCam()
+
         # Set up the pwm pin managing the fan
         GPIO.setwarnings(False)
         GPIO.setmode(GPIO.BOARD)
@@ -135,6 +136,9 @@ class FilmScanner(App):
 
         # create scan counter
         self.scanCounter = 1
+
+        # init progress bar
+        self.progressBar = None
 
     def build(self):
         pass
@@ -152,7 +156,7 @@ class FilmScanner(App):
         if temp < nominalTemp:
             fanSpeed = 10
         elif nominalTemp < temp < maxTemp:
-            fanSpeed = 100*(temp-nominalTemp)/(maxTemp-nominalTemp)
+            fanSpeed = 100 * (temp - nominalTemp) / (maxTemp - nominalTemp)
         elif temp >= maxTemp:
             fanSpeed = 100
 
@@ -169,7 +173,7 @@ class FilmScanner(App):
         ss = self.stream.shutterSpeed
         ev = self.stream.exposure_comp
         # Pi camera uses a scale of +24 to -24 while raspistill uses +10 to -10, so convert
-        ev = (ev/24)*10
+        ev = (ev / 24) * 10
         self.stream.stop()
 
         # Capture image and increment the scan counter
@@ -180,10 +184,26 @@ class FilmScanner(App):
         self.stream.start()
         self.root.get_screen('main').start()
 
+    def triggerConvert(self):
+        nFiles = len(os.listdir('./tmp/'))
+
+        self.progressBar = ProgressBar()
+        self.progressBar.position = (200, 200)
+        self.progressBar.max = float(nFiles + 1)
+        self.progressBar.value = 0.0
+        self.progressBar.bar_name = "Converting Files"
+        self.root.get_screen('main').ids.layout.add_widget(self.progressBar)
+        Thread(target=self.convertImages, args=()).start()
+
     def convertImages(self):
+        ####Re: Changing Bar Name two increments early##########
+        # Kivy still doesn't like to play nice with updating, so all name updates
+        # come 2 increments late, so I beat them to it.
+        ####It's stupid & hackish I KNOW #######################
+
         # make sure that there is a USB Drive inserted
         currentTime = time.strftime("%Y-%m-%d_%H%M%S")
-        if len(os.listdir('/media/pi'))==0:
+        if len(os.listdir('/media/pi')) == 0:
             print('Please insert a USB Drive')
             return
 
@@ -195,16 +215,26 @@ class FilmScanner(App):
         tempFolder = '/home/pi/Documents/FilmScanner/tmp/'
         files = os.listdir(tempFolder)
         converter = RPICAM2DNG()
-        for f in files:
-            converter.convert(image='./tmp/'+f)
+        for i in range(len(files)):
+            converter.convert(image='./tmp/' + files[i])
+            self.progressBar.value += 1.0
+            if i == (len(files) - 2):
+                self.progressBar.bar_name = "Transferring Files"
 
         # Move the dngs to the removable drive
+        self.progressBar.bar_name = "Deleting tmp files"
         cmd = 'mv ' + tempFolder + '*.dng ' + folder
         subprocess.call(cmd, shell=True)
+        self.progressBar.value += 1.0
 
         # Remove the files in the tmp folder
         cmd = 'rm ' + tempFolder + "*.jpg"
         subprocess.call(cmd, shell=True)
+        self.progressBar.value += 1.0
+
+        # Sleep for 1 second so we can enjoy the glory of finishing dis shit then delete the bar
+        time.sleep(1)
+        self.root.get_screen('main').ids.layout.remove_widget(self.progressBar)
 
 
 if __name__ == '__main__':

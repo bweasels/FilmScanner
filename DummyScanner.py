@@ -1,10 +1,9 @@
 # Kivy graphics imports
 from kivy.app import App
-from kivy.clock import Clock
+from kivy.config import Config
 from kivy.core.window import Window
 from kivy.graphics.texture import Texture
 from kivy.uix.screenmanager import ScreenManager
-from kivy.config import Config
 
 # piCamera imports
 # from picamera.array import PiRGBArray
@@ -19,7 +18,7 @@ import os
 
 # Class imports
 from Classes.dummyCam import DummyVid
-from Classes.CustomGUIClasses import BaseScreen, GenericBar
+from Classes.CustomGUIClasses import BaseScreen, ProgressBar
 
 Config.set('graphics', 'resizable', 0)
 Window.size = (800, 480)
@@ -133,6 +132,17 @@ class FilmScanner(App):
         self.stream.start()
         self.root.get_screen('main').start()
 
+    def triggerConvert(self):
+        nFiles = len(os.listdir('./tmp/'))
+
+        self.progressBar = ProgressBar()
+        self.progressBar.position = (200, 200)
+        self.progressBar.max = float(nFiles + 1)
+        self.progressBar.value = 0.0
+        self.progressBar.bar_name = "Converting Files"
+        self.root.get_screen('main').ids.layout.add_widget(self.progressBar)
+        Thread(target=self.convertImages, args=()).start()
+
     def convertImages(self):
         currentTime = time.strftime("%Y-%m-%d_%H%M%S")
         folder = "./testUSB/" + currentTime
@@ -141,7 +151,15 @@ class FilmScanner(App):
 
         for i in range(len(files)):
             print('file: ' + str(i))
+            self.progressBar.value += 1.0
             time.sleep(1)
+            if i == (len(files) - 2):
+                self.progressBar.bar_name = "Transferring Files"
+
+        time.sleep(1)
+        self.progressBar.value += 1.0
+        time.sleep(1)
+        self.root.get_screen('main').ids.layout.remove_widget(self.progressBar)
 
 
 if __name__ == '__main__':

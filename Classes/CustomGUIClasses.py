@@ -1,8 +1,13 @@
+# All the kivy imports
 from kivy.app import App
 from kivy.clock import Clock
+from kivy.core.text import Label
 from kivy.uix.button import Button
-from kivy.uix.screenmanager import ScreenManager, Screen
+from kivy.uix.widget import Widget
+from kivy.uix.screenmanager import Screen
+from kivy.graphics import Rectangle, Color, Line
 
+# Generic import
 import time
 
 
@@ -46,23 +51,19 @@ A generic module to plot out barplots
 Authorship: Ben Wesley
 """
 
-from kivy.core.text import Label
-from kivy.graphics import Rectangle, Color, Line
-from kivy.uix.widget import Widget
-
 _DEFAULT_TEXT_LABEL = Label(text="{}", font_size=32, halign='middle', valign='middle')
-_DEFAULT_NAME = Label(text="{}", font_size=50)
+_DEFAULT_NAME = Label(text="{}", font_size=75)
 _DEFAULT_PLOT_SIZE = (10, 100)
 _DEFAULT_MAX_PROGRESS = 10.0
 _DEFAULT_MIN_PROGRESS = 0
 _DEFAULT_POS = 100, 100
 _DEFAULT_BORDER_THICKNESS = 0
-_DEFAULT_BORDER_HEIGHT = 250
+_DEFAULT_BORDER_HEIGHT = 400
 _DEFAULT_BORDER_WIDTH = 100
 _DEFAULT_BAR_COLOR = (0, 0, 1, 1)
 
 
-class GenericBar(Widget):
+class ProgressBar(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -185,8 +186,8 @@ class GenericBar(Widget):
         Function used to refresh the text of the progress label.
         Additionally updates the variable tracking the label's texture size
         """
-        value = format(self._value, '.2f')
-        self._text_label.text = self._default_label_text.format(str(value))
+        value = round(100*self._value/self._max_progress)
+        self._text_label.text = self._default_label_text.format(str(value) + "%")
         self._text_label.refresh()
         self._label_size = self._text_label.texture.size
 
@@ -211,20 +212,28 @@ class GenericBar(Widget):
             self.canvas.clear()
             self._refresh_text()
 
-            # Draw the background progress line
+            # Greyed out backdrop
+            Color(0.1, 0.1, 0.1, 0.75)
+            Rectangle(pos=(0,0), size=(800, 480))
+
+            # Outside border of the progress bar
             Color(1, 1, 1, 1)
-            Line(rectangle=(self._pos[0], self._pos[1], self._border_width, self._border_height),
+            Line(rectangle=(self._pos[0], self._pos[1], self._border_height, self._border_width),
                  width=self._border_thickness)
 
-            Color(0.5, 0.5, 0.5, 1)
-            Rectangle(pos=(self._bar_x, self._bar_y),
-                      size=(self._bar_width, self._get_bar_height(self._value)))
-
+            # Internal Rectangle Representing Progress
             Color(1, 1, 1, 1)
+            Rectangle(pos=(self._bar_x, self._bar_y),
+                     size=(self._get_bar_height(self._value), self._bar_width))
+
+            # Text for the % progress
+            Color(0.5, 0.5, 0.5, 1)
             Rectangle(texture=self._text_label.texture, size=self._label_size,
-                      pos=(self._pos[0] + (self._border_width - self._label_size[0]) / 2,
-                           self._pos[1] + self._border_height * 0.42))
+                      pos=(self._pos[0] + self._border_height * 0.42,
+                           self._pos[1] + (self._border_width - self._label_size[0]) / 2))
+
+            # Bar Name for the bar
             Color(1, 1, 1, 1)
             Rectangle(texture=self._name.texture, size=self._name_size,
-                      pos=(self._pos[0] + self._border_thickness * 2,
-                           self._pos[1] + self._border_height))
+                      pos=(self._pos[0] + (self._border_height - self._name_size[0]) / 2,
+                           self._pos[1] + self._border_width))
