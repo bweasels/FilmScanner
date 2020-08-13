@@ -24,7 +24,7 @@ import cv2
 
 # Import homebrew classes from the file
 from Classes.raspiCam import RaspiVid, RaspiCam
-from Classes.CustomGUIClasses import BaseScreen, ProgressBar
+from Classes.CustomGUIClasses import BaseScreen, ConversionBar
 
 # Graphical properties
 Window.fullscreen = True
@@ -187,7 +187,7 @@ class FilmScanner(App):
     def triggerConvert(self):
         nFiles = len(os.listdir('./tmp/'))
 
-        self.progressBar = ProgressBar()
+        self.progressBar = ConversionBar()
         self.progressBar.position = (200, 200)
         self.progressBar.max = float(nFiles + 1)
         self.progressBar.value = 0.0

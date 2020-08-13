@@ -63,7 +63,7 @@ _DEFAULT_BORDER_WIDTH = 100
 _DEFAULT_BAR_COLOR = (0, 0, 1, 1)
 
 
-class ProgressBar(Widget):
+class ConversionBar(Widget):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
@@ -199,7 +199,7 @@ class ProgressBar(Widget):
         quanta = range / (self._max_progress - self._min_progress)
         return int(quanta * value)
 
-    def _draw(self, *args):
+    def _draw(self):
         """
         Function used to draw the progress bar onto the screen.
         The drawing process is as follows:
@@ -214,7 +214,7 @@ class ProgressBar(Widget):
 
             # Greyed out backdrop
             Color(0.1, 0.1, 0.1, 0.75)
-            Rectangle(pos=(0,0), size=(800, 480))
+            Rectangle(pos=(0, 0), size=(800, 480))
 
             # Outside border of the progress bar
             Color(1, 1, 1, 1)
@@ -224,7 +224,7 @@ class ProgressBar(Widget):
             # Internal Rectangle Representing Progress
             Color(1, 1, 1, 1)
             Rectangle(pos=(self._bar_x, self._bar_y),
-                     size=(self._get_bar_height(self._value), self._bar_width))
+                      size=(self._get_bar_height(self._value), self._bar_width))
 
             # Text for the % progress
             Color(0.5, 0.5, 0.5, 1)
