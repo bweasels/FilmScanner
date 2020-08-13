@@ -189,7 +189,7 @@ class FilmScanner(App):
 
         self.progressBar = ConversionBar()
         self.progressBar.position = (200, 200)
-        self.progressBar.max = float(nFiles + 1)
+        self.progressBar.max = float(nFiles + 2)
         self.progressBar.value = 0.0
         self.progressBar.bar_name = "Converting Files"
         self.root.get_screen('main').ids.layout.add_widget(self.progressBar)
