@@ -76,7 +76,7 @@ class RaspiVid:
 
     def processImage(self):
         # For some reason, openCV's images are flipped for Kivy, either way capture it
-        image = cv2.flip(self.getFrame(), 0)
+        # image = cv2.flip(self.getFrame(), 0) # I don't think we need to flip it anymore
 
         if self._wb:
             b, g, r = cv2.split(image)
@@ -175,7 +175,7 @@ class RaspiCam:
 #        cmd = 'raspistill -md 3 -ex snow -mm backlit -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
 #              '-t 500 -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filename
         cmd = 'raspistill -md 3 -ex off -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
-              '-t 500 -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filename
+              '-t 500 -set -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filename
 
         print(cmd)
         subprocess.call(cmd, shell=True)

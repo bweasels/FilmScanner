@@ -43,9 +43,9 @@ WindowManager:
                     width: 2
                     rectangle: self.x, self.y, self.width, self.height
             on_release:
-                self._disable()
+                self.disable()
                 app.captureImage()
-                self._enable()
+                self.enable()
 
         SlowButton:
             id: convert
@@ -55,10 +55,9 @@ WindowManager:
             pos: (0, 480 * 0.8)
             background_color: (0.5, 0.5, 0.5, 0.25)
             on_release:
-                self._disable()
+                self.disable()
                 app.triggerConvert()
-                #app.convertImages()
-                self._enable()
+                self.enable()
 
 <MenuScreen>:
     name: 'menu'

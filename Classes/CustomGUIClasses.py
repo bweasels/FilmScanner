@@ -37,10 +37,10 @@ class SlowButton(Button):
     def __init__(self, **kwargs):
         super().__init__(**kwargs)
 
-    def _disable(self):
+    def disable(self):
         self.disabled = True
 
-    def _enable(self):
+    def enable(self):
         time.sleep(0.5)
         self.disabled = False
 

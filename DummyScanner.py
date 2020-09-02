@@ -144,25 +144,32 @@ class FilmScanner(App):
         Thread(target=self.convertImages, args=()).start()
 
     def convertImages(self):
-        currentTime = time.strftime("%Y-%m-%d_%H%M%S")
-        folder = "./testUSB/" + currentTime
-        os.mkdir(folder)
-        files = os.listdir('./tmp/')
+        try:
+            currentTime = time.strftime("%Y-%m-%d_%H%M%S")
+            folder = "./testUSB/" + currentTime
+            os.mkdir(folder)
+            files = os.listdir('./tmp/')
 
-        for i in range(len(files)):
-            print('file: ' + str(i))
+            for i in range(len(files)):
+                print('file: ' + str(i))
+                self.progressBar.value += 1.0
+                time.sleep(1)
+                if i == (len(files) - 2):
+                    self.progressBar.bar_name = "Transferring Files"
+
+            time.sleep(1)
             self.progressBar.value += 1.0
             time.sleep(1)
-            if i == (len(files) - 2):
-                self.progressBar.bar_name = "Transferring Files"
+            self.root.get_screen('main').ids.layout.remove_widget(self.progressBar)
 
-        time.sleep(1)
-        self.progressBar.value += 1.0
-        time.sleep(1)
-        self.root.get_screen('main').ids.layout.remove_widget(self.progressBar)
+        except Exception:
+            import traceback
+            import sys
+            exc_info = sys.exc_info()
+            if exc_info:
+                App.get_running_app().stop()
+                raise exc_info[1].with_traceback(exc_info[2])
 
 
 if __name__ == '__main__':
     FilmScanner().run()
-    FilmScanner().stop()
-    quit()
