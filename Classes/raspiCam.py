@@ -77,6 +77,7 @@ class RaspiVid:
     def processImage(self):
         # For some reason, openCV's images are flipped for Kivy, either way capture it
         # image = cv2.flip(self.getFrame(), 0) # I don't think we need to flip it anymore
+        image = self.getFrame()
 
         if self._wb:
             b, g, r = cv2.split(image)
