@@ -208,8 +208,11 @@ class FilmScanner(App):
             return
 
         # create a dated output folder
-        folder = os.path.join('/media/pi', os.listdir('/media/pi')[0], currentTime)
-        os.mkdir(folder)
+        # folder = os.path.join('/media/pi', os.listdir('/media/pi')[0], currentTime)
+        # os.mkdir(folder)
+        folder = '/media/pi/"' + os.listdir('/media/pi')[0] + '"/' + currentTime
+        cmd = 'mkdir ' + folder
+        subprocess.call(cmd, shell=True)
 
         # Get the images in the tmp folder and use PyDNG to convert
         tempFolder = '/home/pi/Documents/FilmScanner/tmp/'
