@@ -164,6 +164,7 @@ class RaspiVid:
             self.camera.exposure_mode = 'off'
             self.camera.shutter_speed = ss
             print("Locked Shutter Speed")
+            print(self.camera.shutter_speed)
             self.locked = True
 
         self.camera.shutter_speed = round(self.camera.exposure_speed * 1.05)
