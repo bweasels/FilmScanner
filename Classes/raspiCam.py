@@ -155,8 +155,8 @@ class RaspiVid:
             self.locked = True
 
         self.camera.shutter_speed = round(self.camera.exposure_speed * 1.05)
-        print(round(self.camera.exposure_speed*1.05))
-        print(self.camera.exposure_speed)
+        print("Expected Shutter Speed: " + str(self.camera.shutter_speed) +
+              " Actual Shutter Speed: " + str(self.camera.exposure_speed))
 
 
     def decreaseSS(self):
