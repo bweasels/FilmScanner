@@ -11,9 +11,10 @@ class DummyVid:
         self.res = (640, 480)
         self.previewExposure = False
 
-        # set up variables for this
+        # set up variables for some of the underlying logic
         self.frame = None
         self.stopped = False
+        self.locked = False
 
         # variables for image capture
         self._iso = 0
@@ -105,13 +106,25 @@ class DummyVid:
     def awbMode(self, value):
         self._awbMode = value
 
-    @property
-    def exposure_comp(self):
-        return "Dummy Exposure Comp"
+    # @property
+    # def exposure_comp(self):
+    #     return "Dummy Exposure Comp"
+    #
+    # @exposure_comp.setter
+    # def exposure_comp(self, value):
+    #     self._exposure_comp = value
 
-    @exposure_comp.setter
-    def exposure_comp(self, value):
-        self._exposure_comp = value
+    def increaseSS(self):
+        if not self.locked:
+            print("Locked Shutter Speed")
+            self.locked = True
+        self.shutterSpeed = round(self._shutterSpeed*1.05)
+
+    def decreaseSS(self):
+        if not self.locked:
+            print("Locked Shutter Speed")
+            self.locked = True
+        self.shutterSpeed = round(self._shutterSpeed*0.95)
 
     def getSettings(self):
         return "Dummy Camera Settings"

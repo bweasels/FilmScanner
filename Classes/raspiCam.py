@@ -29,6 +29,7 @@ class RaspiVid:
         # Internal data variables
         self.frame = None
         self.stopped = False
+        self.locked = False
 
         # variables for image post processing
         self._invert = False
@@ -137,13 +138,33 @@ class RaspiVid:
     def awbMode(self, value):
         self.camera.awb_mode = value
 
-    @property
-    def exposure_comp(self):
-        return self.camera.exposure_compensation
+    # @property
+    # def exposure_comp(self):
+    #     return self.camera.exposure_compensation
+    #
+    # @exposure_comp.setter
+    # def exposure_comp(self, value):
+    #     self.camera.exposure_compensation = value
 
-    @exposure_comp.setter
-    def exposure_comp(self, value):
-        self.camera.exposure_compensation = value
+    def increaseSS(self):
+        if not self.locked:
+            ss = self.camera.exposure_speed
+            self.camera.exposure_mode = 'off'
+            self.camera.shutter_speed = ss
+            print("Locked Shutter Speed")
+            self.locked = True
+
+        self.camera.shutter_speed = round(self.camera.exposure_speed*1.05)
+
+    def decreaseSS(self):
+        if not self.locked:
+            ss = self.camera.exposure_speed
+            self.camera.exposure_mode = 'off'
+            self.camera.shutter_speed = ss
+            print("Locked Shutter Speed")
+            self.locked = True
+
+        self.camera.shutter_speed = round(self.camera.exposure_speed*1.05)
 
     def getSettings(self):
         ag = self.iso[0]

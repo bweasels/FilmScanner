@@ -112,22 +112,45 @@ WindowManager:
             on_release:
                 app.stream.activateWB()
 
-        Slider:
-            id: exposureSlider
-            min: -24
-            max: 24
-            step: 1
-            value: 0
-            orientation: 'vertical'
-            pos: (640, 110)
-            size_hint: (0.2, 0.6)
-            on_value:
-                app.stream.exposure_comp = self.value
-                print(self.value)
+#        Slider:
+#            id: exposureSlider
+#            min: -24
+#            max: 24
+#            step: 1
+#            value: 0
+#            orientation: 'vertical'
+#            pos: (640, 110)
+#            size_hint: (0.2, 0.6)
+#            on_value:
+#                app.stream.exposure_comp = self.value
+#                print(self.value)
+
+        Button:
+            id: increaseSS
+            text: "Increase"
+            font_size: 30
+            size_hint: (0.2, 0.3)
+            pos: (640, 248)
+            background_color: (0.5, 0.5, 0.5, 0.25)
+            halign: 'center'
+            valign: 'middle'
+            on_release:
+                app.stream.increaseSS()
+        Button:
+            id: increaseSS
+            text: "Decrease"
+            font_size: 30
+            size_hint: (0.2, 0.3)
+            pos: (640, 100)
+            background_color: (0.5, 0.5, 0.5, 0.25)
+            halign: 'center'
+            valign: 'middle'
+            on_release:
+                app.stream.decreaseSS()
 
         Label:
-            id: exposureLabel:
-            text: "Exposure\nComp"
+            id: SSCompLabel:
+            text: "Shutter Speed \nComp"
             font_size: 24
             pos: (640, 380)
             size_hint: (0.2, 0.2)
