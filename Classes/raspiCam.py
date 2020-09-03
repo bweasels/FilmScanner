@@ -192,7 +192,7 @@ class RaspiCam:
         self.stopped = False
 
     #    def capture(self, fname):
-    def capture(self, shutterSpeed, exposureComp, photoNo):
+    def capture(self, shutterSpeed, photoNo):
         cv2.waitKey(500)
         filename = './tmp/scan' + str(photoNo) + '.jpg'
         print(filename)
