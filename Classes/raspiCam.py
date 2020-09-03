@@ -57,8 +57,9 @@ class RaspiVid:
         return self
 
     def stop(self):
-        # tell the class to shutdown
+        # tell the class to shutdown and reset the exposure mode off flag
         self.stopped = True
+        self.locked = False
 
     def _update(self):
         # keep looping and keep the stream open
@@ -139,19 +140,19 @@ class RaspiVid:
         self.camera.awb_mode = value
 
     def increaseSS(self):
+
+        # if still using auto exposure, lock exposure and then increase shutter speed
         if not self.locked:
             ss = self.camera.exposure_speed
             self.camera.exposure_mode = 'off'
             self.camera.shutter_speed = ss
             print("Locked Shutter Speed")
             self.locked = True
-
         self.camera.shutter_speed = round(self.camera.shutter_speed + 15)
-        print("Expected Shutter Speed: " + str(self.camera.shutter_speed) +
-              " Actual Shutter Speed: " + str(self.camera.exposure_speed))
 
 
     def decreaseSS(self):
+        # if still useing auto exposure, lock exposure and decrease shutter speed
         if not self.locked:
             ss = self.camera.exposure_speed
             self.camera.exposure_mode = 'off'
@@ -159,10 +160,7 @@ class RaspiVid:
             print("Locked Shutter Speed")
             print(self.camera.shutter_speed)
             self.locked = True
-
         self.camera.shutter_speed = round(self.camera.shutter_speed - 15)
-        print("Expected Shutter Speed: " + str(self.camera.shutter_speed) +
-              " Actual Shutter Speed: " + str(self.camera.exposure_speed))
 
     def getSettings(self):
         ag = self.iso[0]
