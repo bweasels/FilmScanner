@@ -154,7 +154,7 @@ class RaspiVid:
             print("Locked Shutter Speed")
             self.locked = True
 
-        self.camera.shutter_speed = round(self.camera.exposure_speed*1.05)
+        self.camera.shutter_speed = round(self.camera.exposure_speed * 1.05)
 
     def decreaseSS(self):
         if not self.locked:
@@ -164,7 +164,7 @@ class RaspiVid:
             print("Locked Shutter Speed")
             self.locked = True
 
-        self.camera.shutter_speed = round(self.camera.exposure_speed*1.05)
+        self.camera.shutter_speed = round(self.camera.exposure_speed * 1.05)
 
     def getSettings(self):
         ag = self.iso[0]
@@ -191,15 +191,17 @@ class RaspiCam:
         self.frame = None
         self.stopped = False
 
-#    def capture(self, fname):
+    #    def capture(self, fname):
     def capture(self, shutterSpeed, exposureComp, photoNo):
         cv2.waitKey(500)
         filename = './tmp/scan' + str(photoNo) + '.jpg'
         print(filename)
-#        cmd = 'raspistill -md 3 -ex snow -mm backlit -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
-#              '-t 500 -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filename
+        #        cmd = 'raspistill -md 3 -ex snow -mm backlit -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
+        #              '-t 500 -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filename
+        #        cmd = 'raspistill -md 3 -ex off -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
+        #              '-t 500 -set -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filenaame
         cmd = 'raspistill -md 3 -ex off -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
-              '-t 500 -set -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filename
+              '-t 500 -set -ss ' + str(shutterSpeed) + ' -r -o ' + filename
 
         print(cmd)
         subprocess.call(cmd, shell=True)
