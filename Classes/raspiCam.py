@@ -155,6 +155,8 @@ class RaspiVid:
             self.locked = True
 
         self.camera.shutter_speed = round(self.camera.exposure_speed * 1.05)
+        print(self.camera.exposure_speed)
+
 
     def decreaseSS(self):
         if not self.locked:
@@ -165,6 +167,7 @@ class RaspiVid:
             self.locked = True
 
         self.camera.shutter_speed = round(self.camera.exposure_speed * 1.05)
+        print(self.camera.exposure_speed)
 
     def getSettings(self):
         ag = self.iso[0]
