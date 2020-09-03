@@ -30,6 +30,7 @@ class RaspiVid:
         self.frame = None
         self.stopped = False
         self.locked = False
+        self.ss = None
 
         # variables for image post processing
         self._invert = False
@@ -47,7 +48,10 @@ class RaspiVid:
         self.camera.awb_gains = (3.625, 1.402)
         cv2.waitKey(2000)
 
-        # self.camera.exposure_mode = 'off'
+        # When restarting the stream after capturing an image, use the old shutter speed settings
+        if self.ss is not None:
+            self.camera.exposure_mode = 'off'
+            self.camera.shutter_speed = self.ss
 
         self.output = PiRGBArray(self.camera, size=self.res)
         self.stream = self.camera.capture_continuous(self.output, format='bgr', use_video_port=True, resize=(640, 480))
@@ -58,8 +62,8 @@ class RaspiVid:
 
     def stop(self):
         # tell the class to shutdown and reset the exposure mode off flag
+        self.ss = self.camera.shutter_speed
         self.stopped = True
-        self.locked = False
 
     def _update(self):
         # keep looping and keep the stream open
@@ -160,6 +164,7 @@ class RaspiVid:
             print("Locked Shutter Speed")
             print(self.camera.shutter_speed)
             self.locked = True
+
         self.camera.shutter_speed = round(self.camera.shutter_speed - 15)
 
     def getSettings(self):
@@ -191,10 +196,6 @@ class RaspiCam:
         cv2.waitKey(500)
         filename = './tmp/scan' + str(photoNo) + '.jpg'
         print(filename)
-        #        cmd = 'raspistill -md 3 -ex snow -mm backlit -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
-        #              '-t 500 -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filename
-        #        cmd = 'raspistill -md 3 -ex off -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
-        #              '-t 500 -set -ev ' + str(exposureComp) + ' -ss ' + str(shutterSpeed) + ' -r -o ' + filenaame
         cmd = 'raspistill -md 3 -ex off -awb off -ag 1 -dg 1 -awbg 3.625,1.402 ' \
               '-t 500 -set -ss ' + str(shutterSpeed) + ' -r -o ' + filename
 
