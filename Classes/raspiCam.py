@@ -146,7 +146,7 @@ class RaspiVid:
             print("Locked Shutter Speed")
             self.locked = True
 
-        self.camera.shutter_speed = round(self.camera.exposure_speed + 10)
+        self.camera.shutter_speed = round(self.camera.shutter_speed + 15)
         print("Expected Shutter Speed: " + str(self.camera.shutter_speed) +
               " Actual Shutter Speed: " + str(self.camera.exposure_speed))
 
@@ -160,7 +160,7 @@ class RaspiVid:
             print(self.camera.shutter_speed)
             self.locked = True
 
-        self.camera.shutter_speed = round(self.camera.exposure_speed - 10)
+        self.camera.shutter_speed = round(self.camera.shutter_speed - 15)
         print("Expected Shutter Speed: " + str(self.camera.shutter_speed) +
               " Actual Shutter Speed: " + str(self.camera.exposure_speed))
 
