@@ -138,14 +138,6 @@ class RaspiVid:
     def awbMode(self, value):
         self.camera.awb_mode = value
 
-    # @property
-    # def exposure_comp(self):
-    #     return self.camera.exposure_compensation
-    #
-    # @exposure_comp.setter
-    # def exposure_comp(self, value):
-    #     self.camera.exposure_compensation = value
-
     def increaseSS(self):
         if not self.locked:
             ss = self.camera.exposure_speed
@@ -197,7 +189,6 @@ class RaspiCam:
         self.frame = None
         self.stopped = False
 
-    #    def capture(self, fname):
     def capture(self, shutterSpeed, photoNo):
         cv2.waitKey(500)
         filename = './tmp/scan' + str(photoNo) + '.jpg'

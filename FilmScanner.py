@@ -56,6 +56,7 @@ class MenuScreen(BaseScreen):
 
         # On touch if within the image, gather the 10x10 grid of pixels and get average bgr for wb
         if (64.0 < touch.pos[0] < 576.0) & (touch.pos[1] > 96.0):
+            print(touch.pos)
             # Get the ratio between the onscreen image and actual image
             xRatio = 800.0 / 640.0
             yRatio = 640.0 / 384.0
@@ -171,13 +172,9 @@ class FilmScanner(App):
         # Stop the menu, get the current settings from the stream, and stop the stream
         self.root.get_screen('main').stop()
         ss = self.stream.shutterSpeed
-        # ev = self.stream.exposureComp
-        # Pi camera uses a scale of +24 to -24 while raspistill uses +10 to -10, so convert
-        # ev = (ev / 24) * 10
         self.stream.stop()
 
         # Capture image and increment the scan counter
-        #self.camera.capture(shutterSpeed=ss, exposureComp=ev, photoNo=self.scanCounter)
         self.camera.capture(shutterSpeed=ss, photoNo=self.scanCounter)
         self.scanCounter += 1
 
