@@ -152,8 +152,11 @@ class RaspiVid:
             self.camera.shutter_speed = ss
             print("Locked Shutter Speed")
             self.locked = True
-        self.camera.shutter_speed = round(self.camera.shutter_speed + 15)
 
+        self.camera.shutter_speed = round(self.camera.shutter_speed + 15)
+        print('Increasing Shutter Speed')
+        print("Current Shutter Speed: " + str(self.camera.exposure_speed) +
+              "Expected Shutter Speed: " + str(self.camera.shutter_speed))
 
     def decreaseSS(self):
         # if still useing auto exposure, lock exposure and decrease shutter speed
@@ -162,10 +165,12 @@ class RaspiVid:
             self.camera.exposure_mode = 'off'
             self.camera.shutter_speed = ss
             print("Locked Shutter Speed")
-            print(self.camera.shutter_speed)
             self.locked = True
 
         self.camera.shutter_speed = round(self.camera.shutter_speed - 15)
+        print('Decreasing Shutter Speed')
+        print("Current Shutter Speed: " + str(self.camera.exposure_speed) +
+              "Expected Shutter Speed: " + str(self.camera.shutter_speed))
 
     def getSettings(self):
         ag = self.iso[0]
