@@ -43,7 +43,8 @@ class RaspiVid:
 
         # Initalize camera output and stream
         self.camera = PiCamera(resolution=self.res)
-        self.camera.iso = 100
+        self.camera.analog_gain = 1.0
+        self.camera.digital_gain = 1.0
         self.camera.awb_mode = 'off'
         self.camera.awb_gains = (3.625, 1.402)
         cv2.waitKey(2000)
